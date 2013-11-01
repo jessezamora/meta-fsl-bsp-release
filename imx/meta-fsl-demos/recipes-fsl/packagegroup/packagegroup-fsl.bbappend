@@ -32,7 +32,7 @@ RDEPENDS_${PN}-tools-testapps = " \
 "
 
 # only add in cryptodev for non solo-lite mx6 devices
-SOC_TOOLS_TESTAPPS_mx6q += "cyptodev"
+SOC_TOOLS_TESTAPPS_mx6q += "cryptodev"
 SOC_TOOLS_TESTAPPS_mx6dl += "cryptodev"
 SOC_TOOLS_TESTAPPS_mx6s += "cryptodev"
 
