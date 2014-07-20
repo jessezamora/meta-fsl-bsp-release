@@ -5,8 +5,8 @@ require recipes-graphics/gpu-viv-bin-mx6q/gpu-viv-bin-mx6q.inc
 
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)}"
 
-SRC_URI[md5sum] = "8b9c4f6181acf46028e39508a970ecc1"
-SRC_URI[sha256sum] = "7e5a3db22b99740756f408b881691f81c03090256754e44f69369bf039e9cbcf"
+SRC_URI[md5sum] = "d729db01e3eec3384e310cd3507761ce"
+SRC_URI[sha256sum] = "0d71029e561b94bc14a0039eeaabec1610d5244ccaf0e77356f0eee80cba828d"
 
 SRC_URI += "file://directfbrc"
 
