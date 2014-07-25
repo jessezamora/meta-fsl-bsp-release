@@ -1,26 +1,26 @@
-# Copyright (C) 2012-2014 Freescale Semiconductor
-# Copyright (C) 2012-2013 O.S. Systems Software LTDA.
+# Copyright (C) 2014 Freescale Semiconductor
 # Released under the MIT license (see COPYING.MIT for the terms)
+DESCRIPTION = "Freescale Extension for HDMI performance"
+LICENSE = "MIT-X"
 
-require recipes-graphics/xorg-driver/xorg-driver-video.inc
-
-PE = "3"
-
-DEPENDS += "virtual/xserver virtual/libx11 virtual/libgal-x11 gpu-viv-bin-mx6q pixman"
+DEPENDS += "virtual/kernel xf86-video-imxfb-vivante"
 
 LIC_FILES_CHKSUM = "file://EXA/src/vivante_fbdev/vivante.h;endline=19;md5=641ac6e6d013833e36290797f4d7089c"
 
 SRC_URI = "${FSL_MIRROR}/xserver-xorg-video-imx-viv-${PV}.tar.gz"
 S="${WORKDIR}/xserver-xorg-video-imx-viv-${PV}/"
 
-SRC_URI[md5sum] = "697d9a3fb244eb95eae4207bf2d9c321"
-SRC_URI[sha256sum] = "9178c6b721e55645bedf6d2cfaf836f5c6e2684673215358a6b6845c10a7a085"
+SRC_URI[md5sum] = "974f33945dc96e876907541906297798"
+SRC_URI[sha256sum] = "5602266ac493c580386562068522b2fde43f24aa91c61ab6aaa62bb37a6cb672"
 
-EXTRA_OEMAKE += "-C EXA/src -f makefile.linux prefix=${D}/usr \
+inherit autotools pkgconfig
+
+EXTRA_OEMAKE += "-f makefile.linux prefix=${D}/usr \
                  sysroot=${STAGING_DIR_TARGET} \
                  BUSID_HAS_NUMBER=1 \
                  BUILD_IN_YOCTO=1 \
                  XSERVER_GREATER_THAN_13=1"
+
 
 CFLAGS += "-I${STAGING_INCDIR}/xorg \
            -I${STAGING_INCDIR}/drm \
@@ -31,7 +31,7 @@ CFLAGS += "-I${STAGING_INCDIR}/xorg \
 #        sed it.
 do_configure_prepend () {
     sed -i 's,$(sysroot)/usr/include,${STAGING_INCDIR},g' \
-            ${S}EXA/src/makefile.linux
+            ${S}FslExt/src/makefile.linux
 }
 
 # FIXME: This is need as Freescale didn't use standard Makefile filename
@@ -40,12 +40,21 @@ do_configure_prepend () {
 base_do_compile () {
     oe_runmake || die "make failed"
 }
+do_compile () {
+    cd FslExt/src
+    oe_runmake
+    install -d ${D}${libdir}
+    cd ../../util/autohdmi
+    oe_runmake
+}
 
-do_install_append () {
-	install -d ${D}${includedir}
-	cp -axr ${S}/EXA/src/vivante_gal/vivante_priv.h ${D}${includedir}
-	cp -axr ${S}/EXA/src/vivante_gal/vivante_gal.h ${D}${includedir}
-	find ${D}${includedir} -type f -exec chmod 660 {} \;
+
+do_install () {
+    install -d ${D}${libdir}
+    cp -axr ${S}/FslExt/src/libfsl_x11_ext.so ${D}${libdir}
+
+    install -d ${D}${exec_prefix}/sbin
+    cp -axr ${S}/util/autohdmi/autohdmi ${D}${exec_prefix}/sbin
 }
 
 RDEPENDS_${PN} += "libvivante-dri-mx6 \
@@ -54,6 +63,13 @@ RDEPENDS_${PN} += "libvivante-dri-mx6 \
                    xserver-xorg-extension-dri \
                    xserver-xorg-extension-dri2 \
                    xserver-xorg-extension-glx"
+
+REALSOLIBS := "${SOLIBS}"
+SOLIBS = "${SOLIBSDEV}"
+
+FILES_${PN} = " ${libdir}/libfsl_x11_ext${SOLIBS} ${exec_prefix}/sbin/autohdmi "
+#FILES_${PN}-dbg = "${libdir}/.debug/ "
+#FILES_${PN}-dbg += "${exec_prefix}/sbin/.debug/"
 
 PACKAGE_ARCH = "${MACHINE_SOCARCH}"
 COMPATIBLE_MACHINE = "(mx6)"
