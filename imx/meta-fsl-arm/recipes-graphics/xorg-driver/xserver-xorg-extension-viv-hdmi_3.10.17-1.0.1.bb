@@ -42,7 +42,7 @@ base_do_compile () {
     oe_runmake || die "make failed"
 }
 
-do_compile () {
+do_compile_append () {
 
 oe_runmake -C ${S}/FslExt/src
  
