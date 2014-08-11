@@ -1,5 +1,9 @@
-Freescale's 3.10.17-1.0.0 Yocto BSP
+Freescale's 3.10.17-1.0.1 Yocto BSP
 ==================================
+
+Release Notes:
+Note this update is for a GPU 2D hang fix only.  This release has been tested in a limited basis and has not 
+gone through a full GA tset cycle.  This update is for kernel, graphics and xserver only.
 
 This BSP is a Freescale release providing support for the following processors
 
