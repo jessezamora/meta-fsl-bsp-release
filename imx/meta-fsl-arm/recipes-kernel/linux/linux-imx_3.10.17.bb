@@ -8,11 +8,11 @@ DEPENDS += "lzop-native bc-native"
 
 COMPATIBLE_MACHINE = "(mx6)"
 
-SRC_URI = "git://${FSL_ARM_GIT_SERVER}/linux-2.6-imx.git;protocol=git;branch=imx_3.10.17_1.0.1_ga"
+SRC_URI = "git://${FSL_ARM_GIT_SERVER}/linux-2.6-imx.git;protocol=git;branch=imx_3.10.17_1.0.2_ga"
 
-SRCREV = "dac46dcf913585956a0e7a838e6f4b7465f00f57"
+SRCREV = "94c683128e5b7b2d2aaa92de28a32500926b0fad"
 
-LOCALVERSION = "-1.0.1_ga"
+LOCALVERSION = "-1.0.2_ga"
 
 IMX_TEST_SUPPORT = "y"
 
