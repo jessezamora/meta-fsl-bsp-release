@@ -1,7 +1,7 @@
 
 SRCBRANCH = "imx_v2013.04_3.10.17_1.0.0_ga"
 SRC_URI = "git://${FSL_ARM_GIT_SERVER}/uboot-imx.git;protocol=git;branch=${SRCBRANCH}"
-SRCREV = "ce0ea2507c492d43bbf88f8609482a171b2d2003"
+SRCREV = "06dd4f798b2014ed9642f8d6f526aa9630dd8ca5"
 
 # save UBOOT_CONFIG as separate names
 do_deploy_append() {
