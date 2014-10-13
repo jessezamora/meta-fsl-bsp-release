@@ -1,4 +1,4 @@
-Freescale's 3.10.17-1.0.1 Yocto BSP
+Freescale's 3.10.17-1.0.2 Yocto BSP
 ==================================
 
 Release Notes:
@@ -149,21 +149,4 @@ $google-chrome --use-gl=egl
 
 QT5
 ---
-The meta-fsl-qt5 layer is not enabled for default builds.    The layer demonstrates changes needed for QT5 5.2.1 to work on the dora branch.
-This layer will not work on the master branch.
-
-To integrate meta-fsl-qt5, from the build directory run the fsl-qt5-demo.sh
-../sources/meta-fsl-bsp-release/imx/meta-fsl-qt5/tools/fsl-qt5-setup-demo.sh
-
-This will donwload the meta-qt5 layer, checkout the 5.2.1 branch and add qt5 to the distro features.  The meta-fsl-qt5 layer provides
-new image recipes for x11, wayland, fb and directfb.   Examples provided with the image recipes is the Cinematic Experience.  Each backend requires
-a different set of parameters.  Below are the parameters for QT5  Cinematic Experience.
-
--- Frame buffer
-Qt5_CinematicExperience -platform eglfs -plugin evdevtouch:/dev/input/event0
-
----Wayland
-Qt5_CinematicExperience -platform wayland-egl -plugin evdevtouch:/dev/input/event0 --fullscreen
-
---- X11
-Qt5_CinematicExperience -platform xcb -plugin evdevtouch:/dev/input/event0
+Please use 3.10.31 release for QT5 support.  QT5 has not been tested in the 3.10.17-1.0.2 release
