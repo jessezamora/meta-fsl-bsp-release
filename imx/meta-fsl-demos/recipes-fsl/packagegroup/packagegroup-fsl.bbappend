@@ -31,3 +31,7 @@ RDEPENDS_${PN}-tools-testapps = " \
     procps \
 "
 
+SOC_TOOLS_TESTAPPS_mx6 += " \
+    iw \
+    can-utils \
+"
