@@ -32,6 +32,7 @@ SOC_TOOLS_TESTAPPS_mx6 += " \
     vlan \
     cryptodev-module \
     cryptodev-tests \
+    imx-gpu-viv-demos \
     ${PN}-fslcodec-testapps \
 "
 
