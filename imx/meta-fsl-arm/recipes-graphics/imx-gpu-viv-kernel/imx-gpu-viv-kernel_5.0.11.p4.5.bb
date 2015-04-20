@@ -2,7 +2,7 @@
 
 require imx-gpu-viv-kernel.inc
           
-SRC_URI[md5sum] = "addcaa6fde8f4a10cc1fe0e127ef5271"
-SRC_URI[sha256sum] = "fcea5c2ba1010b6707f22ca5585d7b4baca2791066e81a37a618d06971eda40b"
+SRC_URI[md5sum] = "5c15bb77fc55eda675c5a18a8186371d"
+SRC_URI[sha256sum] = "c15bab5a142f5fa95a55ed83386b4f7d057049f15f0e82080502786650640fee"
 
 S = "${WORKDIR}/${PN}-${PV}"
