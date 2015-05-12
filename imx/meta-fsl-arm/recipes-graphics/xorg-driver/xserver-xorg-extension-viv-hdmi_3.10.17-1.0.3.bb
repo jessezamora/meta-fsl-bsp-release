@@ -13,8 +13,8 @@ SRC_URI = "${FSL_MIRROR}/xserver-xorg-video-imx-viv-${PV}.tar.gz \
 
 S="${WORKDIR}/xserver-xorg-video-imx-viv-${PV}/"
 
-SRC_URI[md5sum] = "974f33945dc96e876907541906297798"
-SRC_URI[sha256sum] = "5602266ac493c580386562068522b2fde43f24aa91c61ab6aaa62bb37a6cb672"
+SRC_URI[md5sum] = "0cd3153bc658daef5df1bc04a65f9522"
+SRC_URI[sha256sum] = "5319fa2216f6a8b1b7807576c26866e11e4e9453c79f08af602bc824a4272252"
 
 inherit update-rc.d autotools pkgconfig
 
