@@ -12,9 +12,9 @@ KERNEL_SRC ?= "git://git.freescale.com/imx/linux-2.6-imx.git;protocol=git"
 
 SRC_URI = "${KERNEL_SRC};branch=imx_3.10.17_1.0.0_ga"
 
-SRCREV = "33597e348b2d60dd5c71890ef7b7d3d3fd6e4e97"
+SRCREV = "${AUTOREV}"
 
-LOCALVERSION = "-1.0.2_ga"
+LOCALVERSION = "-1.0.3_ga"
 
 IMX_TEST_SUPPORT = "y"
 
