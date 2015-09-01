@@ -16,3 +16,6 @@ python __anonymous () {
 }
 
 PACKAGE_FP_TYPE = "hardfp"
+
+COMPATIBLE_MACHINE = "(mx6q|mx6dl|mx6sx|mx6sl)"
+

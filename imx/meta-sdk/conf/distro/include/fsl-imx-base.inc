@@ -49,6 +49,9 @@ PREFERRED_VERSION_fsl-gpu-sdk_mx6 = "2.2"
 
 # Use Wayland new version
 BBMASK = "meta-fsl-arm/recipes-graphics/wayland/weston_%.bbappend"
+BBMASK .= "|meta-fsl-arm/recipes-graphics/imx-gpu-viv/imx-gpu-viv_5.0.11.p4.5-hfp.bb"
+BBMASK .= "|meta-fsl-arm/recipes-graphics/imx-gpu-viv/imx-gpu-viv_5.0.11.p4.5-sfp.bb"
+BBMASK .= "|meta-fsl-arm/recipes-graphics/packagegroups/packagegroup-core-directfb.bbappend"
 BBMASK .= "|meta-fsl-arm/recipes-graphics/mesa/mesa_%.bbappend"
 
 # Remove the GST patch on the community
