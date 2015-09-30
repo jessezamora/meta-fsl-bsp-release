@@ -1,9 +1,8 @@
-Freescale's 3.10.17-1.0.2 Yocto BSP
+Freescale's 3.10.17-1.0.3 Yocto BSP
 ==================================
 
 Release Notes:
-Note this update is for a GPU 2D hang fix only.  This release has been tested in a limited basis and has not 
-gone through a full GA tset cycle.  This update is for kernel, graphics and xserver only.
+This patch release has been qualified for graphics changes only.
 
 This BSP is a Freescale release providing support for the following processors
 
@@ -45,7 +44,7 @@ This BSP is a Freescale release providing support for the following processors
 Quick Start Guide
 -----------------
 First install the i.MX Freescale BSP repo
-$: repo init -u git://git.freescale.com/imx/fsl-arm-yocto-bsp.git -b imx-3.10.17-1.0.0_ga
+$: repo init -u git://git.freescale.com/imx/fsl-arm-yocto-bsp.git -b imx-3.10.17-1.0.3_patch
 
 Download the Yocto Freescale Layers
 $: repo sync
@@ -149,4 +148,4 @@ $google-chrome --use-gl=egl
 
 QT5
 ---
-Please use 3.10.31 release for QT5 support.  QT5 has not been tested in the 3.10.17-1.0.2 release
+Please use 3.10.53 release for QT5 support.  QT5 has not been tested in the 3.10.17-1.0.3 release
