@@ -9,7 +9,7 @@ SRC_URI = "${FSL_MIRROR}/xserver-xorg-video-imx-viv-${PV}.tar.gz \
 
 LIC_FILES_CHKSUM = "file://COPYING-MIT;md5=b5e9d9f5c02ea831ab3ecf802bb7c4f3"
 
-SRC_URI[md5sum] = "0a169dd68d16da356ca40d2a23ddcc29"
-SRC_URI[sha256sum] = "fd1b6263ed527ea5e8ecd6aa3f452bee5060f05086204dbfc1a8c1a81ab4f379"
+SRC_URI[md5sum] = "8acbdddd51c9b1b0fd25137eeabd786d"
+SRC_URI[sha256sum] = "3eed38193e31bb5ba8d2c817bd9b4f6e2fe7540d2cab36de9098cb4f11946a9f"
 
 S = "${WORKDIR}/xserver-xorg-video-imx-viv-${PV}/"
