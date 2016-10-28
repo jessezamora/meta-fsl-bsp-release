@@ -1,0 +1,29 @@
+From 9bfdc0f37ae4f1cff8bb43eb103898068e1df174 Mon Sep 17 00:00:00 2001
+From: Chenyan Feng <ella.feng@nxp.com>
+Date: Fri, 28 Oct 2016 15:34:26 +0800
+Subject: [PATCH] fix the wrong parameter in tvl1_optical_flow.cpp
+
+Upstream-Status:Pending
+Signed-off-by: Chenyan Feng <ella.feng@nxp.com>
+
+---
+ samples/tapi/tvl1_optical_flow.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/samples/tapi/tvl1_optical_flow.cpp b/samples/tapi/tvl1_optical_flow.cpp
+index 7dee739..0d05524 100644
+--- a/samples/tapi/tvl1_optical_flow.cpp
++++ b/samples/tapi/tvl1_optical_flow.cpp
+@@ -89,7 +89,8 @@ int main(int argc, const char* argv[])
+         "{ o output   | tvl1_output.jpg | specify output save path }"
+         "{ c camera   | 0               | enable camera capturing }"
+         "{ m cpu_mode |                 | run without OpenCL }"
+-        "{ v video    |                 | use video as input }";
++        "{ v video    |                 | use video as input }"
++	     "{ s          |                 | use cpu mode or not}";
+ 
+     CommandLineParser cmd(argc, argv, keys);
+ 
+-- 
+1.9.1
+
