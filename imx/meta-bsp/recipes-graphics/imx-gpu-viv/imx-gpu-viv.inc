@@ -15,7 +15,7 @@ EXTRA_PROVIDES = ""
 EXTRA_PROVIDES_mx6q  = " virtual/libgl virtual/libgles1 virtual/libgles2"
 EXTRA_PROVIDES_mx6dl  = " virtual/libgl virtual/libgles1 virtual/libgles2"
 EXTRA_PROVIDES_mx6sx  = " virtual/libgl virtual/libgles1 virtual/libgles2"
-PROVIDES += "virtual/wayland-egl virtual/libgal-x11 virtual/egl virtual/libopenvg virtual/libg2d ${EXTRA_PROVIDES}"
+PROVIDES += "virtual/wayland-egl virtual/libgal-x11 virtual/egl virtual/libopenvg ${EXTRA_PROVIDES}"
 
 PE = "1"
 
@@ -40,7 +40,6 @@ PACKAGES =+ "libclc-mx6 libclc-mx6-dev libclc-mx6-dbg \
 	libwayland-viv-mx6 libwayland-viv-mx6-dev libwayland-viv-mx6-dbg \
 	libgc-wayland-protocol-mx6 libgc-wayland-protocol-mx6-dev libgc-wayland-protocol-mx6-dbg \
 	libwayland-egl-mx6-dev \
-	imx-gpu-viv-g2d imx-gpu-viv-g2d-dev imx-gpu-viv-g2d-dbg \
 	imx-gpu-viv-tools imx-gpu-viv-tools-dbg \
 	imx-gpu-viv-tools-apitrace imx-gpu-viv-tools-apitrace-dbg \
 	imx-gpu-viv-demos imx-gpu-viv-demos-dbg \
@@ -112,9 +111,7 @@ do_install () {
     install -d ${D}${bindir}
 
     cp -P ${S}/gpu-core/usr/lib/*.so* ${D}${libdir}
-    cp  ${S}/g2d/usr/lib/*.so* ${D}${libdir}
     cp -r ${S}/gpu-core/usr/include/* ${D}${includedir}
-    cp -Pr ${S}/g2d/usr/include/* ${D}${includedir}
     cp -r ${S}/gpu-demos/opt ${D}
     cp -axr ${S}/gpu-tools/gmem-info/usr/bin/* ${D}${bindir}
 
@@ -238,6 +235,8 @@ do_install () {
 
 ALLOW_EMPTY_${PN} = "1"
 
+RDEPENDS_${PN} += "virtual/libg2d"
+
 FILES_libclc-mx6 = "${libdir}/libCLC${SOLIBS}"
 FILES_libclc-mx6-dev = "${includedir}/CL ${libdir}/libCLC${SOLIBSDEV}"
 FILES_libclc-mx6-dbg = "${libdir}/.debug/libCLC${SOLIBS}"
@@ -319,11 +318,6 @@ FILES_libgc-wayland-protocol-mx6-dev = "${libdir}/libgc_wayland_protocol${SOLIBS
 FILES_libgc-wayland-protocol-mx6-dbg = "${libdir}/libgc_wayland_protocol${SOLIBS}"
 
 FILES_libwayland-egl-mx6-dev = "${libdir}/pkgconfig/wayland-egl.pc"
-
-INSANE_SKIP_imx-gpu-viv-g2d += "dev-so"
-FILES_imx-gpu-viv-g2d = "${libdir}/libg2d* "
-FILES_imx-gpu-viv-g2d-dev = "${includedir}/g2d.h"
-FILES_imx-gpu-viv-g2d-dbg = "${libdir}/.debug/libg2d${SOLIBS}"
 
 FILES_imx-gpu-viv-tools = "${bindir}/gmem_info"
 FILES_imx-gpu-viv-tools-dbg = "${bindir}/gmem_info"
