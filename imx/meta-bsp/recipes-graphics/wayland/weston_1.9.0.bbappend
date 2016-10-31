@@ -10,6 +10,7 @@ SRC_URI_append_mx6 = " \
     file://0006-MGS-1236-imx6qp-imx6dl-First-frame-distored-when-som.patch \
     file://0007-MGS-1236-1-imx6qp-imx6dl-First-frame-distored-when-s.patch \
 "
+DEPENDS_append_mx6 = " virtual/libg2d"
 
 PACKAGECONFIG_append_mx6q = " cairo-glesv2"
 PACKAGECONFIG_append_mx6dl = " cairo-glesv2"
