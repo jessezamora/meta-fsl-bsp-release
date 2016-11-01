@@ -17,6 +17,8 @@ SRC_URI_IMX = " \
     file://0013-MGS-1945-Use-common-API-to-support-G2d-compositor.patch    \
     file://0014-MGS-1987-Get-stride-from-the-FB-buffe.patch                \
     file://0015-MGS-2221-imx-171-Fix-weston-build-failed.patch             \
+    file://0016-MGS-2343-ccc-XWLD-T3DStressTest_Wayland-displays-abn.patch \
+    file://0017-MGS-2343-1-ccc-XWLD-T3DStressTest_Wayland-displays-a.patch \
 "
 SRC_URI_XWAYLAND = " \
     file://xwayland.weston-start \
