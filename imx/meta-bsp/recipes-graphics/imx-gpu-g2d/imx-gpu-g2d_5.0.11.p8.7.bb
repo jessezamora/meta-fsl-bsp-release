@@ -27,6 +27,7 @@ do_install () {
     cp -r ${S}/gpu-demos/opt ${D}
 }
 
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 FILES_${PN} = "${libdir}/libg2d* /opt"
 FILES_${PN}-dev = "${includedir}"
 
