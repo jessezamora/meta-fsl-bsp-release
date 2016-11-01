@@ -8,6 +8,8 @@ PREFERRED_PROVIDER_virtual/kernel_mx6 = "linux-imx"
 PREFERRED_PROVIDER_virtual/kernel_mx6ul = "linux-imx"
 PREFERRED_PROVIDER_virtual/kernel_mx7 = "linux-imx"
 
+PREFERRED_PROVIDER_virtual/libg2d_mx6 = "imx-gpu-g2d"
+
 # Masking out community conflicts
 # Use new Wayland version
 BBMASK = "meta-fsl-arm/recipes-graphics/wayland/weston_%.bbappend"
