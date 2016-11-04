@@ -13,7 +13,7 @@ SOC_GPU_TOOLS_XWAYLAND_mx6q  = "mesa-demos gtkperf glmark2"
 SOC_GPU_TOOLS_XWAYLAND_mx6dl = "mesa-demos gtkperf glmark2"
 SOC_GPU_TOOLS_XWAYLAND_mx6sx = "mesa-demos gtkperf glmark2"
 SOC_GPU_TOOLS_XWAYLAND_mx6sl = "mesa-demos gtkperf"
-SOC_GPU_TOOLS_XWAYLAND_mx8   = "mesa-demos gtkperf glmark2"
+SOC_GPU_TOOLS_XWAYLAND_mx8   = "mesa-demos gtkperf glmark2 vulkan-samples"
 
 # X11 packages
 
