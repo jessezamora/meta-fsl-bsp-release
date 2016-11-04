@@ -1,0 +1,28 @@
+From fe940543d03a2c4cf997deff23ea0c636ed9534e Mon Sep 17 00:00:00 2001
+From: Chenyan Feng <ella.feng@nxp.com>
+Date: Fri, 4 Nov 2016 16:05:49 +0800
+Subject: [PATCH] clahe.cl has some incorrect usage of opencl __local data
+ type. Resolved this and clahe TAPI case works well.
+
+Upstream-Status: Pending
+Signed-off-by: Chenyan Feng <ella.feng@nxp.com>
+---
+ modules/imgproc/src/opencl/clahe.cl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/modules/imgproc/src/opencl/clahe.cl b/modules/imgproc/src/opencl/clahe.cl
+index 9f88b20..3a5cf72 100644
+--- a/modules/imgproc/src/opencl/clahe.cl
++++ b/modules/imgproc/src/opencl/clahe.cl
+@@ -189,7 +189,7 @@ __kernel void calcLut(__global __const uchar * src, const int srcStep,
+ 
+         // broadcast evaluated value
+ 
+-        __local int totalClipped;
++         int totalClipped;
+ 
+         if (tid == 0)
+             totalClipped = clipped;
+-- 
+1.9.1
+
