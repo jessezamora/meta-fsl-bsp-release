@@ -21,7 +21,7 @@ SOC_GPU_TOOLS_X11_mx8 = " mesa-demos glmark2 eglinfo-x11 gtkperf glcompbench"
 
 # fb packages
 
-SOC_GPU_TOOLS_FB_mx8 = "vulkan-samples vulkan-loader-validation-layers vulkan-loader-validation-layers-dev"
+SOC_GPU_TOOLS_FB_mx8 = "vulkan-samples"
 
 
 # OpenCV test apps
