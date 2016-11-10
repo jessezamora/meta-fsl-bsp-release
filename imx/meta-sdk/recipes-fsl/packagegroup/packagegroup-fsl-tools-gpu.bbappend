@@ -16,6 +16,7 @@ SOC_TOOLS_GPU_mx8 = " \
         imx-gpu-apitrace-bin \
         imx-gpu-viv-demos \
         imx-gpu-sdk \
+        imx-gpu-viv-tools \
         "
 
 SOC_TOOLS_GPU_remove_mx8 = "${XWAYLAND}"
