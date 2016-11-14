@@ -58,3 +58,4 @@ PREFERRED_VERSION_kernel-module-imx-gpu-viv_mx6 = "6.2.0.p2"
 #IMX_DEFAULT_DISTRO_FEATURES += " systemd"
 
 GCCVERSION = "5.3.0"
+#GLIBCVERSION = "2.24"
