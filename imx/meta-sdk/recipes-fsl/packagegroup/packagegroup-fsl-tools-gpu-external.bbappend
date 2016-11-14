@@ -19,11 +19,6 @@ SOC_GPU_TOOLS_XWAYLAND_mx8   = "mesa-demos gtkperf glmark2"
 
 SOC_GPU_TOOLS_X11_mx8 = " mesa-demos glmark2 eglinfo-x11 gtkperf glcompbench"
 
-# fb packages
-
-SOC_GPU_TOOLS_FB_mx8 = "vulkan-samples vulkan-loader-validation-layers vulkan-loader-validation-layers-dev"
-
-
 # OpenCV test apps
 OPENCV_TOOLS_INSTALL = ""
 OPENCV_TOOLS_INSTALL_append_mx6 = "opencv-apps opencv-samples"
