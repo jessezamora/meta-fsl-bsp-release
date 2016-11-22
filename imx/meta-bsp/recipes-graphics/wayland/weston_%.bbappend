@@ -19,6 +19,7 @@ SRC_URI_IMX = " \
     file://0015-MGS-2221-imx-171-Fix-weston-build-failed.patch             \
     file://0016-MGS-2343-ccc-XWLD-T3DStressTest_Wayland-displays-abn.patch \
     file://0017-MGS-2343-1-ccc-XWLD-T3DStressTest_Wayland-displays-a.patch \
+    file://0019-MGS-2397-ccc-Enable-double-buffer-with-fb_pan_displa.patch \
 "
 SRC_URI_XWAYLAND = " \
     file://xwayland.weston-start \
