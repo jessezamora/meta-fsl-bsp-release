@@ -1,0 +1,367 @@
+From d44c753f2241ac4f67b77917ab65d990e076de36 Mon Sep 17 00:00:00 2001
+From: Haihua Hu <jared.hu@nxp.com>
+Date: Tue, 22 Nov 2016 14:04:53 +0800
+Subject: [PATCH 1/3] Revert "ion_allocator: refine ion allocator code."
+
+This reverts commit f63effbf72c5e9ce676bc0557b5cd8ad38748f03.
+---
+ gst-libs/gst/ion/gstionmemory.c | 232 ++++++++++++++++++++++++++--------------
+ gst-libs/gst/ion/gstionmemory.h |   1 +
+ 2 files changed, 151 insertions(+), 82 deletions(-)
+
+diff --git a/gst-libs/gst/ion/gstionmemory.c b/gst-libs/gst/ion/gstionmemory.c
+index 4c160c9..ea62ac4 100755
+--- a/gst-libs/gst/ion/gstionmemory.c
++++ b/gst-libs/gst/ion/gstionmemory.c
+@@ -21,7 +21,6 @@
+ #include <fcntl.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include <unistd.h>
+ #include <sys/ioctl.h>
+ #include <sys/mman.h>
+ #include <sys/types.h>
+@@ -30,34 +29,116 @@
+ #include <gst/allocators/gstdmabuf.h>
+ #include "gstionmemory.h"
+ 
+-GST_DEBUG_CATEGORY_STATIC (ion_allocator_debug);
++GST_DEBUG_CATEGORY_STATIC(ion_allocator_debug);
+ #define GST_CAT_DEFAULT ion_allocator_debug
+ 
+ #define gst_ion_allocator_parent_class parent_class
+ 
+ #define PAGE_ALIGN(x) (((x) + 4095) & ~4095)
+ 
+-G_DEFINE_TYPE (GstIONAllocator, gst_ion_allocator, GST_TYPE_ALLOCATOR)
++G_DEFINE_TYPE(GstIONAllocator, gst_ion_allocator, GST_TYPE_ALLOCATOR)
+ 
+-static gint 
+-gst_ion_ioctl (gint fd, gint req, void *arg)
++static int 
++gst_ion_open()
+ {
+-  gint ret = ioctl (fd, req, arg);
++  int fd = open("/dev/ion", O_RDWR);
++  if (fd < 0)
++    GST_ERROR ("open /dev/ion failed!\n");
++  return fd;
++}
++
++static int 
++gst_ion_close(int fd)
++{
++  int ret = close(fd);
++  if (ret < 0)
++    return -errno;
++  return ret;
++}
++
++static int 
++gst_ion_ioctl(int fd, int req, void *arg)
++{
++  int ret = ioctl(fd, req, arg);
+   if (ret < 0) {
+-    GST_ERROR ("ioctl %x failed with code %d: %s\n", req, ret,
+-        strerror (errno));
++    GST_ERROR ("ioctl %x failed with code %d: %s\n", req,
++        ret, strerror(errno));
++    return -errno;
+   }
+   return ret;
+ }
+ 
+-static void
+-gst_ion_mem_init (void)
++static int 
++gst_ion_alloc(int fd, size_t len, size_t align, unsigned int heap_mask,
++    unsigned int flags, ion_user_handle_t *handle)
++{
++  int ret;
++  struct ion_allocation_data data = {
++    .len = len,
++    .align = align,
++    .heap_id_mask = heap_mask,
++    .flags = flags,
++  };
++
++  if (handle == NULL)
++    return -EINVAL;
++
++  ret = gst_ion_ioctl(fd, ION_IOC_ALLOC, &data);
++  if (ret < 0)
++    return ret;
++  *handle = data.handle;
++  return ret;
++}
++
++static int 
++gst_ion_free(int fd, ion_user_handle_t handle)
++{
++  struct ion_handle_data data = {
++    .handle = handle,
++  };
++  return gst_ion_ioctl(fd, ION_IOC_FREE, &data);
++}
++
++static int 
++gst_ion_map(int fd, ion_user_handle_t handle, size_t length, int prot,
++    int flags, off_t offset, unsigned char **ptr, int *map_fd)
++{
++  int ret;
++  unsigned char *tmp_ptr;
++  struct ion_fd_data data = {
++    .handle = handle,
++  };
++
++  if (map_fd == NULL)
++    return -EINVAL;
++  if (ptr == NULL)
++    return -EINVAL;
++
++  ret = gst_ion_ioctl(fd, ION_IOC_MAP, &data);
++  if (ret < 0)
++    return ret;
++  if (data.fd < 0) {
++    GST_ERROR ("map ioctl returned negative fd\n");
++    return -EINVAL;
++  }
++  tmp_ptr = mmap(NULL, length, prot, flags, data.fd, offset);
++  if (tmp_ptr == MAP_FAILED) {
++    GST_ERROR ("mmap failed: %s\n", strerror(errno));
++    return -errno;
++  }
++  *map_fd = data.fd;
++  *ptr = tmp_ptr;
++  return ret;
++}
++
++static void 
++gst_ion_mem_init(void)
+ {
+-  GstAllocator *allocator = g_object_new (gst_ion_allocator_get_type (), NULL);
++	GstAllocator *allocator = g_object_new(gst_ion_allocator_get_type(), NULL);
+   GstIONAllocator *self = GST_ION_ALLOCATOR (allocator);
+   gint fd;
+ 
+-  fd = open ("/dev/ion", O_RDWR);
++  fd = gst_ion_open();
+   if (fd < 0) {
+     GST_ERROR ("Could not open ion driver");
+     g_object_unref (self);
+@@ -65,24 +146,24 @@ gst_ion_mem_init (void)
+   }
+ 
+   self->fd = fd;
+-  self->dma_allocator = gst_dmabuf_allocator_new ();
++  self->dma_allocator = gst_dmabuf_allocator_new();
+ 
+-  gst_allocator_register (GST_ALLOCATOR_ION, allocator);
++	gst_allocator_register(GST_TYPE_ION_ALLOCATOR, allocator);
+ }
+ 
+-GstAllocator *
+-gst_ion_allocator_obtain (void)
++GstAllocator* 
++gst_ion_allocator_obtain(void)
+ {
+-  static GOnce ion_allocator_once = G_ONCE_INIT;
+-  GstAllocator *allocator;
++	static GOnce ion_allocator_once = G_ONCE_INIT;
++	GstAllocator *allocator;
+ 
+-  g_once (&ion_allocator_once, (GThreadFunc) gst_ion_mem_init, NULL);
++	g_once(&ion_allocator_once, (GThreadFunc)gst_ion_mem_init, NULL);
+ 
+-  allocator = gst_allocator_find (GST_ALLOCATOR_ION);
+-  if (allocator == NULL)
+-    GST_WARNING ("No allocator named %s found", GST_ALLOCATOR_ION);
++	allocator = gst_allocator_find(GST_TYPE_ION_ALLOCATOR);
++	if (allocator == NULL)
++		GST_WARNING("No allocator named %s found", GST_TYPE_ION_ALLOCATOR);
+ 
+-  return allocator;
++	return allocator;
+ }
+ 
+ GQuark
+@@ -97,69 +178,62 @@ gst_ion_memory_quark (void)
+ }
+ 
+ static GstMemory *
+-gst_ion_alloc_alloc (GstAllocator * allocator, gsize size,
++gst_ion_alloc_alloc (GstAllocator * allocator, gint size,
+     GstAllocationParams * params)
+ {
+   GstIONAllocator *self = GST_ION_ALLOCATOR (allocator);
+-  struct ion_allocation_data allocation_data = { 0 };
+-  struct ion_fd_data fd_data = { 0 };
+-  struct ion_handle_data handle_data = { 0 };
+-  ion_user_handle_t ion_handle;
+-  GstIONMemory *ion_mem;
+-  GstMemory *mem;
+-  gsize ion_size;
+-  gint dma_fd = -1;
+-  gint ret;
+-
+-  if (self->fd < 0) {
+-    GST_ERROR ("ion allocate param wrong");
++  gint dmafd = -1;
++  guint8 *ptr = NULL;
++  ion_user_handle_t ionHandle;
++  gint ionSize = PAGE_ALIGN (size + params->prefix + params->padding);
++  gint err;
++
++  if (self->fd < 0)
+     return NULL;
+-  }
+ 
+-  ion_size = PAGE_ALIGN (size + params->prefix + params->padding);
+-  allocation_data.len = ion_size;
+-  allocation_data.align = params->align;
+-  allocation_data.heap_id_mask = ION_HEAP_TYPE_DMA_MASK;
+-  allocation_data.flags = 0;
+-  if (gst_ion_ioctl (self->fd, ION_IOC_ALLOC, &allocation_data) < 0) {
+-    GST_ERROR ("ion allocate failed.");
++  err = gst_ion_alloc(self->fd, ionSize, 8, 1, 0, &ionHandle);
++  if (err) {
++    GST_ERROR ("gst_ion_alloc failed.");
+     return NULL;
+   }
+-  ion_handle = allocation_data.handle;
+ 
+-  fd_data.handle = ion_handle;
+-  ret = gst_ion_ioctl (self->fd, ION_IOC_MAP, &fd_data);
+-  if (ret < 0 || fd_data.fd < 0) {
+-    GST_ERROR ("map ioctl failed or returned negative fd");
++  err = gst_ion_map(self->fd, ionHandle, ionSize, PROT_READ | PROT_WRITE,
++      MAP_SHARED, 0, &ptr, &dmafd);
++  if (err) {
++    GST_ERROR ("gst_ion_map failed.");
+     goto bail;
+   }
+-  dma_fd = fd_data.fd;
++  GST_DEBUG ("phyalloc ptr:0x%x, ionSize:%d dmafd: %d", (int32_t)ptr,
++      ionSize, dmafd);
+ 
+-  ion_mem = g_slice_new0 (GstIONMemory);
++  GstIONMemory *ion_mem = g_slice_new0 (GstIONMemory);
+   gst_memory_init (GST_MEMORY_CAST (ion_mem), GST_MEMORY_FLAG_NO_SHARE,
+-      allocator, NULL, ion_size, params->align, params->prefix, size);
++                    allocator, 0, size, 0, 0, size);
+ 
+-  ion_mem->size = ion_size;
+-  ion_mem->handle = ion_handle;
+-  ion_mem->fd = dma_fd;
++  ion_mem->vaddr = ptr;
++  ion_mem->size = ionSize;
++  ion_mem->handle = ionHandle;
++  ion_mem->fd = dmafd;
+ 
+-  mem = gst_dmabuf_allocator_alloc (self->dma_allocator, dma_fd, size);
++  GstMemory * mem =
++    gst_dmabuf_allocator_alloc(self->dma_allocator, dmafd, ionSize);
+ 
+   gst_mini_object_set_qdata (GST_MINI_OBJECT (mem), GST_ION_MEMORY_QUARK,
+-      ion_mem, (GDestroyNotify) gst_memory_unref);
++                              ion_mem, gst_memory_unref);
+ 
+-  GST_LOG ("ion allocated size: %" G_GSIZE_FORMAT "DMA FD: %d", ion_size,
+-      dma_fd);
++  GST_LOG ("allocated memory %p by allocator %p with qdata %p\n",
++            mem, allocator, ion_mem);
+ 
+   return mem;
+ 
+ bail:
+-  if (dma_fd >= 0) {
+-    close (dma_fd);
++  gst_ion_free(self->fd, ionHandle);
++  if (ptr != MAP_FAILED) {
++    munmap(ptr, ionSize);
++  }
++  if (dmafd > 0) {
++    close(dmafd);
+   }
+-  handle_data.handle = ion_handle;
+-  gst_ion_ioctl (self->fd, ION_IOC_FREE, &handle_data);
+-
+   return NULL;
+ }
+ 
+@@ -168,20 +242,15 @@ gst_ion_alloc_free (GstAllocator * allocator, GstMemory * memory)
+ {
+   GstIONAllocator *self = GST_ION_ALLOCATOR (allocator);
+   GstIONMemory *ion_mem = (GstIONMemory *) memory;
+-  struct ion_handle_data handle_data = { 0 };
+-  ion_user_handle_t ion_handle;
+ 
+-  if (self->fd < 0 || !ion_mem || ion_mem->fd < 0) {
+-    GST_ERROR ("ion free param wrong");
++  if (!ion_mem || self->fd < 0)
+     return;
+-  }
+ 
+-  GST_LOG ("ion free size: %" G_GSIZE_FORMAT "DMA FD: %d", ion_mem->size,
+-      ion_mem->fd);
+-  close (ion_mem->fd);
+-  ion_handle = (ion_user_handle_t) ion_mem->handle;
+-  handle_data.handle = ion_handle;
+-  gst_ion_ioctl (self->fd, ION_IOC_FREE, &handle_data);
++  ion_user_handle_t ionHandle =
++    (ion_user_handle_t)ion_mem->handle;
++  munmap(ion_mem->vaddr, ion_mem->size);
++  close(ion_mem->fd);
++  gst_ion_free(self->fd, ionHandle);
+ 
+   g_slice_free (GstIONMemory, ion_mem);
+ }
+@@ -192,14 +261,13 @@ gst_ion_allocator_dispose (GObject * object)
+   GstIONAllocator *self = GST_ION_ALLOCATOR (object);
+ 
+   if (self->fd > 0) {
+-    close (self->fd);
++    close(self->fd);
+     self->fd = -1;
+   }
+ 
+-  if (self->dma_allocator) {
+-    gst_object_unref (self->dma_allocator);
+-    self->dma_allocator = NULL;
+-  }
++  if (self->dma_allocator)
++    gst_object_unref(self->dma_allocator);
++  self->dma_allocator = NULL;
+ 
+   G_OBJECT_CLASS (parent_class)->dispose (object);
+ }
+@@ -214,8 +282,7 @@ gst_ion_allocator_class_init (GstIONAllocatorClass * klass)
+   allocator_class->free = GST_DEBUG_FUNCPTR (gst_ion_alloc_free);
+   gobject_class->dispose = GST_DEBUG_FUNCPTR (gst_ion_allocator_dispose);
+ 
+-  GST_DEBUG_CATEGORY_INIT (ion_allocator_debug, "ionmemory", 0,
+-      "DMA FD memory allocator based on ion");
++  GST_DEBUG_CATEGORY_INIT(ion_allocator_debug, "ionmemory", 0, "DMA FD memory allocator based on ion");
+ }
+ 
+ static void
+@@ -227,3 +294,4 @@ gst_ion_allocator_init (GstIONAllocator * self)
+   allocator->mem_map = NULL;
+   allocator->mem_unmap = NULL;
+ }
++
+diff --git a/gst-libs/gst/ion/gstionmemory.h b/gst-libs/gst/ion/gstionmemory.h
+index 406806d..b6dca5f 100755
+--- a/gst-libs/gst/ion/gstionmemory.h
++++ b/gst-libs/gst/ion/gstionmemory.h
+@@ -59,6 +59,7 @@ struct _GstIONMemory {
+   GstMemory mem;
+ 
+   gint fd;
++  guint8 *vaddr;
+   gsize size;
+   gint handle;
+ };
+-- 
+1.9.1
+
