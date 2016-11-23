@@ -19,6 +19,10 @@ SRC_URI_append = " file://0001-basetextoverlay-make-memory-copy-when-video-buffe
                    file://0010-gstaudiobasesink-print-warning-istead-of-return-ERRO.patch \
                    file://0011-Disable-orc-optimization-for-lib-video-in-plugins-ba.patch \
                    file://0012-Remove-dependence-on-imx-plugin-git.patch \
+                   file://0013-dmabuf-Make-the-allocator-sub-classable.patch \
+                   file://0014-dmabuf-allocator-Add-missing-padding-in-the-class.patch \
+                   file://0015-dmabuf-Add-free-function.patch \
+                   file://0016-ion-DMA-Buf-allocator-based-on-ion.patch \
 "
 
 # The following "IMX_PATCHES" being defined in meta-fsl-arm layer are only applied to mx6 & mx7,
