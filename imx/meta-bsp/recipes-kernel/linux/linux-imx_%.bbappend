@@ -19,15 +19,15 @@ do_install_append () {
    done
 }
 
-do_install_append () {
+#do_install_append () {
    # Install some additional uapi headers
-   install -d ${D}${exec_prefix}/include/linux
-   for UAPI_HDR in ${MORE_UAPI_HEADERS}; do
-       find ${STAGING_KERNEL_DIR} -path '*uapi*' -name ${UAPI_HDR} -exec cp {} ${D}${exec_prefix}/include/linux \;
-       ls ${D}${exec_prefix}/include/linux
-       echo "copy ${UAPI_HDR} done"
-   done
-}
+#   install -d ${D}${exec_prefix}/include/linux
+#   for UAPI_HDR in ${MORE_UAPI_HEADERS}; do
+#       find ${STAGING_KERNEL_DIR} -path '*uapi*' -name ${UAPI_HDR} -exec cp {} ${D}${exec_prefix}/include/linux \;
+#       ls ${D}${exec_prefix}/include/linux
+#       echo "copy ${UAPI_HDR} done"
+#   done
+#}
 
 sysroot_stage_all_append () {
     # FIXME: Remove videodev2.h as conflict with linux-libc-headers
