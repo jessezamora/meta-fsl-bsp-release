@@ -20,7 +20,7 @@ do_install_append () {
 }
 
 #do_install_append () {
-# Install some additional uapi headers
+   # Install some additional uapi headers
 #   install -d ${D}${exec_prefix}/include/linux
 #   for UAPI_HDR in ${MORE_UAPI_HEADERS}; do
 #       find ${STAGING_KERNEL_DIR} -path '*uapi*' -name ${UAPI_HDR} -exec cp {} ${D}${exec_prefix}/include/linux \;
