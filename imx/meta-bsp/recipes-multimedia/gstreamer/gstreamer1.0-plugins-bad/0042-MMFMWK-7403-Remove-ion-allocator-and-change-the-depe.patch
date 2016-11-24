@@ -1,8 +1,7 @@
-From 780a0e551bec2035d1fa72636986d42d35584aba Mon Sep 17 00:00:00 2001
+From d089aef0c7efaf3b4c35769b806898caf2d88402 Mon Sep 17 00:00:00 2001
 From: Haihua Hu <jared.hu@nxp.com>
 Date: Wed, 23 Nov 2016 10:16:38 +0800
-Subject: [PATCH] [MMFMWK-7403] Remove ion allocator and change the dependence
- to gst-based
+Subject: [PATCH] Remove ion allocator and change the dependence to gst-based
 
 ion allocator has been move to gst-base in [MMFMWK-7394]
 
@@ -10,30 +9,38 @@ Upstream Status: Inappropriate [i.MX specific]
 
 Signed-off-by: Haihua Hu <jared.hu@nxp.com>
 ---
- configure.ac                     | 11 +++++------
+ configure.ac                     | 16 +++++++++-------
  ext/gl/gstgldownloadelement.c    |  2 +-
  gst-libs/gst/gl/Makefile.am      |  7 -------
  gst-libs/gst/gl/gstglmemorydma.c |  6 +++---
  gst-libs/gst/gl/gstglupload.c    |  8 ++++----
- 5 files changed, 13 insertions(+), 21 deletions(-)
+ 5 files changed, 17 insertions(+), 22 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 7e9041d..8416099 100644
+index 7e9041d..29d96dd 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -581,11 +581,6 @@ AG_GST_CHECK_FEATURE(ION, [ion], ion, [
-   AC_CHECK_HEADER(linux/ion.h, HAVE_ION="yes", HAVE_ION="no")
- ])
+@@ -576,15 +576,13 @@ else
+ fi
  
+ dnl check for ion
++old_CFLAGS=$CFLAGS
++CFLAGS="$CFLAGS `$PKG_CONFIG --cflags gstreamer-allocators-1.0`"
+ translit(dnm, m, l) AM_CONDITIONAL(USE_ION, true)
+ AG_GST_CHECK_FEATURE(ION, [ion], ion, [
+-  AC_CHECK_HEADER(linux/ion.h, HAVE_ION="yes", HAVE_ION="no")
++  AC_CHECK_HEADER(gst/allocators/gstionmemory.h, HAVE_ION="yes", HAVE_ION="no")
+ ])
+-
 -GST_GL_HAVE_ION=0
 -if test "x$HAVE_ION" = "xyes"; then
 -  GST_GL_HAVE_ION=1
 -fi
--
++CFLAGS=$old_CFLAGS
+ 
  dnl *** opengl ***
  AC_ARG_ENABLE([opengl],
-      [  --enable-opengl         Enable Desktop OpenGL support @<:@default=auto@:>@],
-@@ -880,10 +875,14 @@ PKG_CHECK_MODULES(GST_ALLOCATORS, gstreamer-allocators-1.0,
+@@ -880,10 +878,14 @@ PKG_CHECK_MODULES(GST_ALLOCATORS, gstreamer-allocators-1.0,
    HAVE_GST_ALLOCATORS=yes, )
  
  GST_GL_HAVE_DMABUF=0
@@ -48,7 +55,7 @@ index 7e9041d..8416099 100644
  fi
  
  dnl check if we can include both GL and GLES2 at the same time
-@@ -1292,7 +1291,7 @@ GL_CONFIG_DEFINES="$GL_CONFIG_DEFINES
+@@ -1292,7 +1294,7 @@ GL_CONFIG_DEFINES="$GL_CONFIG_DEFINES
  
  GL_CONFIG_DEFINES="$GL_CONFIG_DEFINES
  #define GST_GL_HAVE_DMABUF $GST_GL_HAVE_DMABUF
@@ -71,10 +78,10 @@ index d6ccc6e..a20da0d 100644
  #endif
  
 diff --git a/gst-libs/gst/gl/Makefile.am b/gst-libs/gst/gl/Makefile.am
-index ccca834..584f47f 100644
+index 9c79e0d..35d4ec2 100644
 --- a/gst-libs/gst/gl/Makefile.am
 +++ b/gst-libs/gst/gl/Makefile.am
-@@ -105,8 +105,6 @@ libgstgl_@GST_API_VERSION@_la_LIBADD += -lg2d
+@@ -103,8 +103,6 @@ libgstgl_@GST_API_VERSION@_la_LIBADD += -lg2d
  endif
  
  if USE_ION
@@ -83,7 +90,7 @@ index ccca834..584f47f 100644
  if USE_EGL
  libgstgl_@GST_API_VERSION@_la_SOURCES += gstglmemorydma.c
  libgstgl_@GST_API_VERSION@include_HEADERS += gstglmemorydma.h
-@@ -200,10 +198,6 @@ GstGL-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstgl-@GST_API_VERSION@
+@@ -198,10 +196,6 @@ GstGL-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstgl-@GST_API_VERSION@
  		$(GL_CFLAGS) \
  		--add-include-path=$(PKG_CONFIG_SYSROOT_DIR)`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-@GST_API_VERSION@` \
  		--add-include-path=$(PKG_CONFIG_SYSROOT_DIR)`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-base-@GST_API_VERSION@` \
@@ -94,7 +101,7 @@ index ccca834..584f47f 100644
  		--library=libgstgl-@GST_API_VERSION@.la \
  		--include=Gst-@GST_API_VERSION@ \
  		--include=GstBase-@GST_API_VERSION@ \
-@@ -234,7 +228,6 @@ typelibs_DATA = $(BUILT_GIRSOURCES:.gir=.typelib)
+@@ -232,7 +226,6 @@ typelibs_DATA = $(BUILT_GIRSOURCES:.gir=.typelib)
  		--includedir=$(builddir) \
  		--includedir=`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-@GST_API_VERSION@` \
  		--includedir=`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-base-@GST_API_VERSION@` \
