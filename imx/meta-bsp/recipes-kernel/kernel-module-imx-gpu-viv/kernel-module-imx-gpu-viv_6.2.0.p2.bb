@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e"
 
 SRC_URI = "${FSL_MIRROR}/${PN}-${PV}.tar.gz \
            file://kbuild.patch"
-SRC_URI[md5sum] = "b29be3613a84d3d8270a80569db888bb"
-SRC_URI[sha256sum] = "848639b8584cfae86d42ddfc829de09f1b9664e00b650e608edbabc3939b4a50"
+SRC_URI[md5sum] = "08d61ecae689ca8e7169eeb73673aa6d"
+SRC_URI[sha256sum] = "d2e28de640357447cf721fb45efb0bf5ebb0d1029c6cea8243887e93ccb22276"
 
 inherit module
 
