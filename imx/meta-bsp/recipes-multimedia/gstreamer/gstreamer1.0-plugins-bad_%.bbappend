@@ -77,6 +77,9 @@ SRC_URI_append = " file://0001-mpegtsmux-Need-get-pid-when-create-streams.patch 
 # include fragment shaders
 FILES_${PN}-opengl += "/usr/share/*.fs"
 
+# Skip the QA_ERROR for mx8
+INSANE_SKIP_gstreamer1.0-plugins-bad-vulkan_mx8 += "dev-deps"
+
 PACKAGE_ARCH_mx6 = "${MACHINE_SOCARCH}"
 PACKAGE_ARCH_mx7 = "${MACHINE_SOCARCH}"
 PACKAGE_ARCH_mx6ul = "${MACHINE_SOCARCH}"
