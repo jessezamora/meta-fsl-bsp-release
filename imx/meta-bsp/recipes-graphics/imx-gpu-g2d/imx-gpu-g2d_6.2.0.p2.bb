@@ -14,8 +14,8 @@ S="${WORKDIR}/${PN}-${PV}"
 
 inherit fsl-eula-unpack
 
-SRC_URI[md5sum] = "b893eb55fe09c3e31d955697bf954884"
-SRC_URI[sha256sum] = "dd7583af40977ef938497215ef422c976e9bff77c68b68314f3feaadc3cc579c"
+SRC_URI[md5sum] = "9749e400b5f72e59e3865aa49e964871"
+SRC_URI[sha256sum] = "ccdf88798b07c3d170f4053c742cf0a90b78d7205424b6c7e1ab17168bb0cbd7"
 
 do_install () {
 
