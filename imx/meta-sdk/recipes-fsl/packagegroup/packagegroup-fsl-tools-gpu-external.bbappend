@@ -21,8 +21,8 @@ SOC_GPU_TOOLS_X11_mx8 = " mesa-demos glmark2 eglinfo-x11 gtkperf glcompbench"
 
 # OpenCV test apps
 OPENCV_TOOLS_INSTALL = ""
-OPENCV_TOOLS_INSTALL_append_mx6 = "opencv-apps opencv-samples"
-OPENCV_TOOLS_INSTALL_append_mx8 = "opencv-apps opencv-samples"
+OPENCV_TOOLS_INSTALL_append_mx6 = "opencv-apps opencv-samples opencv-data"
+OPENCV_TOOLS_INSTALL_append_mx8 = "opencv-apps opencv-samples opencv-data"
 
 RDEPENDS_${PN} = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'x11 wayland', '${SOC_GPU_TOOLS_XWAYLAND}', \
