@@ -27,6 +27,7 @@ SRC_URI_append = " file://0001-basetextoverlay-make-memory-copy-when-video-buffe
                    file://0014-dmabuf-allocator-Add-missing-padding-in-the-class.patch \
                    file://0015-dmabuf-Add-free-function.patch \
                    file://0016-ion-DMA-Buf-allocator-based-on-ion.patch \
+                   file://0017-ion-DMA-Buf-allocator-based-on-ion2.patch \
 "
 
 # The following "IMX_PATCHES" being defined in meta-fsl-arm layer are only applied to mx6 & mx7,
