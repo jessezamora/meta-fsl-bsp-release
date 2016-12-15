@@ -1,6 +1,7 @@
 # Copyright (C) 2014,2016 Freescale Semiconductor
 # Copyright (C) 2012-2015 O.S. Systems Software LTDA.
 # Released under the MIT license (see COPYING.MIT for the terms)
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 DESCRIPTION = "Gstreamer freescale plugins"
 LICENSE = "GPLv2 & LGPLv2 & LGPLv2.1"
@@ -44,6 +45,7 @@ PLATFORM_mx6sx = "MX6SX"
 PLATFORM_mx6ul = "MX6UL"
 PLATFORM_mx6sll = "MX6SLL"
 PLATFORM_mx7= "MX7D"
+PLATFORM_mx7ulp= "MX7ULP"
 PLATFORM_mx8 = "MX8"
 
 # Todo add a mechanism to map possible build targets
@@ -60,6 +62,7 @@ RDEPENDS_${PN} += "imx-parser ${BEEP_RDEPENDS} gstreamer1.0-plugins-good-id3demu
 
 PACKAGECONFIG ?= ""
 PACKAGECONFIG_mx6 = "overlaysink"
+PACKAGECONFIG_mx7ulp = "overlaysink"
 PACKAGECONFIG_mx8 = "overlaysink"
 
 
@@ -73,6 +76,13 @@ PACKAGECONFIG[wma10dec] += ",,${MSDEPENDS},${MSDEPENDS}"
 PACKAGECONFIG[wma8enc] += "--enable-wma8enc,--disable-wma8enc,${MSDEPENDS},${MSDEPENDS}"
 OVDEPENDS = "virtual/libg2d"
 PACKAGECONFIG[overlaysink] += "--enable-overlaysink,--disable-overlaysink, ${OVDEPENDS}"
+
+# Add imx7ulp support patch temporarily, and they won't cause build conflict on other SoC
+# This change is only for Alpha release as it shares the MM release branch with 8dv Beta
+SRC_URI += " file://0001-move-functions-in-gstimxcommon.h-to-one-C-file.patch \
+             file://0002-Change-ion-configure-method.patch \
+             file://0003-Support-i.MX-7ULP-in-imx-gst1.0-plugin.patch \
+"
 
 FILES_${PN} = "${libdir}/gstreamer-1.0/*.so ${datadir}"
 
