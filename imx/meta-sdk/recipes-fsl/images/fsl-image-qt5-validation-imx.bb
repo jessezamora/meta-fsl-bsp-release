@@ -40,6 +40,11 @@ QT5_IMAGE_INSTALL_mx6sll = "${@bb.utils.contains('DISTRO_FEATURES', 'x11','${QT5
 QT5_IMAGE_INSTALL_mx7 = "${@bb.utils.contains('DISTRO_FEATURES', 'x11','${QT5_IMAGE_INSTALL_common}', \
     'qtbase qtbase-examples qtbase-fonts qtbase-plugins', d)}"
 
+QT5_IMAGE_INSTALL_mx7ulp = " \
+    ${QT5_IMAGE_INSTALL_common} \
+    gstreamer1.0-plugins-bad-qt \
+    "
+
 QT5_IMAGE_INSTALL_mx8 = " \
     ${QT5_IMAGE_INSTALL_common} \
     gstreamer1.0-plugins-bad-qt \
