@@ -61,4 +61,4 @@ S = "${WORKDIR}/gst-plugins-bad-1.8.1"
 INSANE_SKIP_gstreamer1.0-plugins-bad-qt-qmlgl += "build-deps"
 
 # Need qtsink for SoCs that have hardware GPU3D
-COMPATIBLE_MACHINE = "(mx6sx|mx6dl|mx6q|mx8)"
+COMPATIBLE_MACHINE = "(mx6sx|mx6dl|mx6q|mx7ulp|mx8)"
