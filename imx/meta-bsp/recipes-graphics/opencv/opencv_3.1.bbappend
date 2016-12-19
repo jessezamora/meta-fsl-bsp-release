@@ -14,6 +14,8 @@ PACKAGECONFIG[qt5] = "-DWITH_QT=ON -DWITH_GTK=OFF,-DWITH_QT=OFF,qtbase,"
 PACKAGECONFIG_append = "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', ' qt5', \
                 bb.utils.contains('DISTRO_FEATURES', 'x11', '', ' qt5', d), d)}"
 
+PACKAGECONFIG_remove_mx6sl = "qt5"
+
 # This is needed to run samples that contains images
 do_install_append() {
 
