@@ -31,14 +31,16 @@ SRC_URI_append_mx6   = " ${SRC_URI_IMX} ${SRC_URI_XWAYLAND}"
 SRC_URI_append_mx6ul = " ${SRC_URI_XWAYLAND}"
 SRC_URI_append_mx6sll = " ${SRC_URI_XWAYLAND}"
 SRC_URI_append_mx7   = " ${SRC_URI_XWAYLAND}"
+SRC_URI_append_mx7ulp   = " ${SRC_URI_IMX8} ${SRC_URI_IMX}"
 SRC_URI_append_mx8   = " ${SRC_URI_IMX8} ${SRC_URI_IMX} ${SRC_URI_XWAYLAND}"
 
+PACKAGECONFIG_append_mx7ulp   = " cairo-glesv2"
 PACKAGECONFIG_append_mx8   = " cairo-glesv2"
 
 PACKAGECONFIG_remove_mx6sl = "egl"
 PACKAGECONFIG_remove_mx6ul = "egl"
 PACKAGECONFIG_remove_mx6sll = "egl"
-PACKAGECONFIG_remove_mx7   = "egl"
+PACKAGECONFIG_remove_mx7d   = "egl"
 
 PACKAGECONFIG_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'x11 wayland', 'xwayland', '', d)}"
 PACKAGE_BEFORE_PN += "${@bb.utils.contains('PACKAGECONFIG', 'xwayland', '${PN}-xwayland', '', d)}"
@@ -50,6 +52,7 @@ PACKAGECONFIG_append = " launch"
 DEPENDS_${PN}-launch_remove = "libpam"
 PACKAGECONFIG[pam] = "--with-pam,--without-pam,libpam"
 
+DEPENDS_append_mx7ulp = " virtual/libg2d"
 DEPENDS_append_mx8 = " virtual/libg2d"
 
 do_install_append() {
@@ -83,4 +86,5 @@ EXTRA_OEMAKE_IMX_LIBS_mx6sl = " \
     COMPOSITOR_LIBS="-lEGL -lGAL -lwayland-server -lxkbcommon -lpixman-1" \
     FB_COMPOSITOR_LIBS="-lEGL -lwayland-server -lxkbcommon" \
 "
+EXTRA_OEMAKE_append_mx7ulp  = " ${EXTRA_OEMAKE_IMX_CFLAGS} ${EXTRA_OEMAKE_IMX_LIBS}"
 EXTRA_OEMAKE_append_mx8  = " ${EXTRA_OEMAKE_IMX_CFLAGS} ${EXTRA_OEMAKE_IMX_LIBS}"
