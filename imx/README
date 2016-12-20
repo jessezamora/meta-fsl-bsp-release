@@ -22,6 +22,7 @@ that might affect these boards.
    * NXP i.MX 6SoloX SABRE Auto (imx6sxsabreauto)
    * NXP i.MX 6SOLO SABRE Smart Device (imx6solosabresd )
    * NXP i.MX 6SOLO SABRE Auto (imx6solosabreauto )
+   * NXP i.MX 7ULP EVK (imx7ulpevk)
 
  * i.MX Device Tree configurations for each machine
     Each machine files lists the associated device trees for that machine.
@@ -41,6 +42,7 @@ that might affect these boards.
     imx6solosabresd - sd
     imx6solosabreauto - sd, eim-nor, spi-nor, nand
     imx6slevk - sd, spi-nor, epdc
+    imx7ulpevk - sd, emmc
 
 
 Quick Start Guide
