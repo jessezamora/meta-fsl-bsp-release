@@ -44,6 +44,7 @@ SRC_URI = " \
     file://0007-qt-implement-qmlglsrc-for-qml-view-grab.patch \
     file://0008-qmlglplugin-Add-i.mx-specific-code.patch \
     file://0009-qmlglsrc-some-enhancements-for-qmlglsrc.patch \
+    file://0010-Make-qmlglsrc-be-compatible-with-GLES2.0.patch \
 "
 
 # remove the duplicate libs except qtsink

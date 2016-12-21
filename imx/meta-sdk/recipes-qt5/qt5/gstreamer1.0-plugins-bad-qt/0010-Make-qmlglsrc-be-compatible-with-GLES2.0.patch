@@ -1,0 +1,43 @@
+From 7c87e73cbec341a9396279841d2e792b9a8d9c52 Mon Sep 17 00:00:00 2001
+From: Haihua Hu <jared.hu@nxp.com>
+Date: Wed, 21 Dec 2016 13:35:57 +0800
+Subject: [PATCH] [MMFMWK-7426]Make qmlglsrc be compatible with GLES2.0
+
+Fallback to glCopyTexImage2D if glBlitFrameBuffer is not available
+to avoid segfault
+
+Upstream-Status: Inappropriate [i.MX specific]
+
+Signed-off-by: Haihua Hu <jared.hu@nxp.com>
+---
+ ext/qt/qtwindow.cc | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/ext/qt/qtwindow.cc b/ext/qt/qtwindow.cc
+index 498416a..8840465 100644
+--- a/ext/qt/qtwindow.cc
++++ b/ext/qt/qtwindow.cc
+@@ -234,12 +234,14 @@ QtGLWindow::afterRendering()
+     goto errors;
+   }
+ 
+-  gl->ReadBuffer ( GL_COLOR_ATTACHMENT0 );
+-  gl->BlitFramebuffer ( 0, 0, width, height,
+-		        0, 0, width, height,
+-		        GL_COLOR_BUFFER_BIT, GL_LINEAR );
+-
+-  //gl->CopyTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, width, height, 0);
++  if (gl->BlitFramebuffer) {
++    gl->ReadBuffer ( GL_COLOR_ATTACHMENT0 );
++    gl->BlitFramebuffer ( 0, 0, width, height,
++                          0, 0, width, height,
++                          GL_COLOR_BUFFER_BIT, GL_LINEAR );
++  } else {
++    gl->CopyTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, width, height, 0);
++  }
+   
+   GST_DEBUG ("rendering finished");
+ 
+-- 
+1.9.1
+
