@@ -1,6 +1,8 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-SRC_URI_IMX8 = " \
+# The following GPU related patches have been upstreamed to community,
+# which is only applied on i.MX6, need to add them back for i.MX7ULP & i.MX8
+SRC_URI_IMX_GPU = " \
     file://0002-MGS-1111-Add-GPU-VIV-suport-for-wayland-and-weston-1.patch \
     file://0003-MGS-1192-xwld-g2d-compositor-dose-not-work.patch \
     file://0004-MGS-1235-Fix-setenv-and-clear-environments.patch \
@@ -31,8 +33,8 @@ SRC_URI_append_mx6   = " ${SRC_URI_IMX} ${SRC_URI_XWAYLAND}"
 SRC_URI_append_mx6ul = " ${SRC_URI_XWAYLAND}"
 SRC_URI_append_mx6sll = " ${SRC_URI_XWAYLAND}"
 SRC_URI_append_mx7   = " ${SRC_URI_XWAYLAND}"
-SRC_URI_append_mx7ulp   = " ${SRC_URI_IMX8} ${SRC_URI_IMX}"
-SRC_URI_append_mx8   = " ${SRC_URI_IMX8} ${SRC_URI_IMX} ${SRC_URI_XWAYLAND}"
+SRC_URI_append_mx7ulp   = " ${SRC_URI_IMX_GPU} ${SRC_URI_IMX}"
+SRC_URI_append_mx8   = " ${SRC_URI_IMX_GPU} ${SRC_URI_IMX} ${SRC_URI_XWAYLAND}"
 
 PACKAGECONFIG_append_mx7ulp   = " cairo-glesv2"
 PACKAGECONFIG_append_mx8   = " cairo-glesv2"
