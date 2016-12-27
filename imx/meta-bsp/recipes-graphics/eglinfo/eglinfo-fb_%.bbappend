@@ -1,5 +1,8 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
+# Set EGL device type for i.MX7ULP, keep it align with morty
+EGLINFO_DEVICE_mx7ulp = "imx6"
+
 # This patch is needed for V6 graphics
 
 SRC_URI_append_mx6 = " \
