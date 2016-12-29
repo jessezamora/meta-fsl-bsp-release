@@ -6,15 +6,17 @@ SRC_URI_append = " file://0001-Fix-command-line-argument-handling-fixes-6525.pat
                    file://0004-clahe.cl-has-some-incorrect-usage-of-opencl-__local-.patch \
 "
 
-# Enable opencv with qt for fb and wayland as gtk is not supported for non x11 backends
-inherit cmake_qt5
+# Disable qt for opencv for now as non-qt builds installs qt because of the dependency of imx-gpu-sdk
+# and gstreamer on opencv for fb/xwayland backends.
 
-PACKAGECONFIG[qt5] = "-DWITH_QT=ON -DWITH_GTK=OFF,-DWITH_QT=OFF,qtbase,"
+# inherit cmake_qt5
 
-PACKAGECONFIG_append = "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', ' qt5', \
-                bb.utils.contains('DISTRO_FEATURES', 'x11', '', ' qt5', d), d)}"
+# PACKAGECONFIG[qt5] = "-DWITH_QT=ON -DWITH_GTK=OFF,-DWITH_QT=OFF,qtbase,"
 
-PACKAGECONFIG_remove_mx6sl = "qt5"
+# PACKAGECONFIG_append = "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', ' qt5', \
+#                bb.utils.contains('DISTRO_FEATURES', 'x11', '', ' qt5', d), d)}"
+
+# PACKAGECONFIG_remove_mx6sl = "qt5"
 
 # This is needed to run samples that contains images
 do_install_append() {
