@@ -8,6 +8,7 @@ SOC_TOOLS_GPU_mx7ulp = " \
     imx-gpu-sdk \
     imx-gpu-viv-tools \
     imx-gpu-apitrace \
+    imx-gpu-apitrace-bin \
     imx-gpu-viv-demos \
     ${@bb.utils.contains('DISTRO_FEATURES', 'x11', \
                      'xserver-xorg-extension-viv-autohdmi', '', d)} \
