@@ -141,6 +141,7 @@ if [ -d ./sources/meta-freescale ]; then
    cp -r sources/meta-fsl-bsp-release/imx/meta-nxp-7ulp/conf/machine/* sources/meta-freescale/conf/machine
 else
    cp -r sources/meta-fsl-bsp-release/imx/meta-bsp/conf/machine/* sources/meta-fsl-arm/conf/machine
+   cp -r sources/meta-fsl-bsp-release/imx/meta-nxp-7ulp/conf/machine/* sources/meta-fsl-arm/conf/machine
 fi
 
 # copy new EULA into community so setup uses latest i.MX EULA
