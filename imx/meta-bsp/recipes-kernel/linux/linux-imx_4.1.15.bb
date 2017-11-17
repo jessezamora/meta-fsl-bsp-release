@@ -1,4 +1,5 @@
 # Copyright (C) 2013-2016 Freescale Semiconductor
+# Copyright 2017 NXP
 # Released under the MIT license (see COPYING.MIT for the terms)
 
 SUMMARY = "Linux Kernel provided and supported by Freescale"
@@ -13,7 +14,7 @@ DEPENDS += "lzop-native bc-native"
 SRCBRANCH = "imx_4.1.15_2.0.0_ga"
 LOCALVERSION = "-2.1.0"
 SRCREV = "30278abfe0977b1d2f065271ce1ea23c0e2d1b6e"
-KERNEL_SRC ?= "git://git.freescale.com/imx/linux-imx.git;protocol=git"
+KERNEL_SRC ?= "git://source.codeaurora.org/external/imx/linux-imx.git;protocol=https"
 SRC_URI = "${KERNEL_SRC};branch=${SRCBRANCH}"
 
 DEFAULT_PREFERENCE = "1"
