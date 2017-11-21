@@ -1,12 +1,10 @@
-NXP's 4.9.51_8qm_beta1_8qxp_alpha Yocto Project BSP
+i.MX Linux Yocto Project BSP 4.9.51_8qxp_alpha Release
 ================================================
 
 The following boards were tested in this release.
 
    * NXP i.MX 8QuadMax LPDDR4 ARM2 (imx8qmlpddr4arm2)
    * NXP i.MX 8QuadXPlus LPDDR4 ARM2 (imx8qxplpddr4arm2)
-   * NXP i.MX 8QuadXPlus MEK (imx8qxpmek)
-
 
  * i.MX Device Tree configurations for each machine
     Each machine files lists the associated device trees for that machine.
@@ -21,7 +19,7 @@ Quick Start Guide
 See the Freescale Yocto Project User's Guide for instructions on installing repo.
 
 First install the i.MX NXP BSP repo
-$: repo init -u git://source.codeaurora.org/external/imx/imx-manifest.git -b imx-linux-morty -m imx-4.9.51-mx8_beta1.xml
+$: repo init -u https://source.codeaurora.org/external/imx/imx-manifest -b imx-linux-morty -m imx-4.9.51-8qxp_alpha.xml
 
 Download the Yocto Project NXP Layers:
 $: repo sync
@@ -48,11 +46,11 @@ Note: DirectFB is no longer supported in i.MX graphic bilds.
    fsl-image-qt5-validation-imx provides a Qt5 image
 
 Here are some examples:
-(The example uses the imx6qsabresd MACHINE but substitute this with whatever you are using)
+(The example uses the imx8qxpmek MACHINE but substitute this with whatever you are using)
 
 Building X11
 ------------
-  DISTRO=fsl-imx-x11 MACHINE=imx6qsabresd source fsl-setup-release.sh -b build-x11
+  DISTRO=fsl-imx-x11 MACHINE=imx8qxpmek source fsl-setup-release.sh -b build-x11
   bitbake <image>
 
 To run the QT5 examples use the following parameters:
@@ -60,7 +58,7 @@ To run the QT5 examples use the following parameters:
 
 Building Frame Buffer (FB)
 ---------------------------
-  DISTRO=fsl-imx-fb MACHINE=imx6qsabresd source fsl-setup-release.sh -b build-fb
+  DISTRO=fsl-imx-fb MACHINE=imx8qxpmek source fsl-setup-release.sh -b build-fb
   bitbake <image>
 
 To run the QT5 examples use the following parameters:
@@ -68,7 +66,7 @@ To run the QT5 examples use the following parameters:
 
 Building XWayland
 ---------------------------
-  DISTRO=fsl-imx-xwayland MACHINE=imx6qsabresd source fsl-setup-release.sh -b build-xwayland
+  DISTRO=fsl-imx-xwayland MACHINE=imx8qxpmek source fsl-setup-release.sh -b build-xwayland
   bitbake <image>
 
 To run the QT5 examples use the following parameters:
@@ -76,19 +74,11 @@ To run the QT5 examples use the following parameters:
 
 Building Wayland-Weston (wayland)
 ---------------------------
-  DISTRO=fsl-imx-wayland MACHINE=imx6qsabresd source fsl-setup-release.sh -b build-wayland
+  DISTRO=fsl-imx-wayland MACHINE=imx8qxpmek source fsl-setup-release.sh -b build-wayland
   bitbake <image>
 
 To run the QT5 examples use the following parameters:
 <QT5 example> platform wayland-egl -plugin evdevtouch:/dev/input/event0 --fullscreen
-
-Hardware Floating Point
------------------------
-This release enables hardware floating point by default.  This feature is enabled in both the machine 
-configurations and in the layer.conf. (Some machine files exist in the community meta-fsl-arm without this setting.)
-DEFAULTTUNE_mx6 = "cortexa9hf-neon
-
-Software floating point is not supported starting with the 4.1.15_1.0.0_ga release
 
 Restricted Codecs
 -----------------
