@@ -1,0 +1,72 @@
+From acede4c5ae37ca1fc70c3b7855fb0ff43fcfaaf4 Mon Sep 17 00:00:00 2001
+From: Breno Lima <breno.lima@nxp.com>
+Date: Tue, 21 Nov 2017 18:13:14 -0200
+Subject: [PATCH 2/2] MLK-14945 HAB: Check if IVT valid before authenticating
+ image
+
+For proper authentication users must check the IVT before authenticating the
+kernel image. If the IVT DCD pointer is not 0, display an error as shown below
+and return a boot failure.
+
+	Authenticate image from DDR location 0x12000000...
+        Error: DCD pointer must be 0
+
+        Authenticate zImage Fail, Please check
+
+Backported to branch imx_v2015.04_4.1.15_1.0.0_ga.
+
+Signed-off-by: Utkarsh Gupta <utkarsh.gupta@nxp.com>
+Signed-off-by: Breno Lima <breno.lima@nxp.com>
+---
+ arch/arm/cpu/armv7/mx6/hab.c | 11 +++++++++++
+ arch/arm/cpu/armv7/mx7/hab.c | 12 ++++++++++++
+ 2 files changed, 23 insertions(+)
+
+diff --git a/arch/arm/cpu/armv7/mx6/hab.c b/arch/arm/cpu/armv7/mx6/hab.c
+index 1cbc916..4e258d5 100644
+--- a/arch/arm/cpu/armv7/mx6/hab.c
++++ b/arch/arm/cpu/armv7/mx6/hab.c
+@@ -359,6 +359,17 @@ uint32_t authenticate_image(uint32_t ddr_start, uint32_t image_size)
+ 				}
+ 			}
+ 
++			/* Report boot failure if DCD pointer is found in IVT */
++			unsigned char *dcd_ptr = (unsigned char *)(ddr_start + ivt_offset + 0xC);
++
++			do {
++				if (*dcd_ptr) {
++					puts("Error: DCD pointer must be 0\n");
++					return result;
++				}
++				dcd_ptr++;
++			} while (dcd_ptr < (unsigned char *)(ddr_start + ivt_offset + 0x10));
++
+ 			load_addr = (uint32_t)hab_rvt_authenticate_image(
+ 					HAB_CID_UBOOT,
+ 					ivt_offset, (void **)&start,
+diff --git a/arch/arm/cpu/armv7/mx7/hab.c b/arch/arm/cpu/armv7/mx7/hab.c
+index 5ab35dd..2b90c4d 100644
+--- a/arch/arm/cpu/armv7/mx7/hab.c
++++ b/arch/arm/cpu/armv7/mx7/hab.c
+@@ -302,6 +302,18 @@ uint32_t authenticate_image(uint32_t ddr_start, uint32_t image_size)
+ 			printf("\tivt_offset = 0x%x\n\tstart = 0x%08x"
+ 			       "\n\tbytes = 0x%x\n", ivt_offset, start, bytes);
+ #endif
++
++			/* Report boot failure if DCD pointer is found in IVT */
++			unsigned char *dcd_ptr = (unsigned char *)(ddr_start + ivt_offset + 0xC);
++
++			do {
++				if (*dcd_ptr) {
++					puts("Error: DCD pointer must be 0\n");
++					return result;
++				}
++				dcd_ptr++;
++			} while (dcd_ptr < (unsigned char *)(ddr_start + ivt_offset + 0x10));
++
+ 			load_addr = (uint32_t)hab_rvt_authenticate_image(
+ 					HAB_CID_UBOOT,
+ 					ivt_offset, (void **)&start,
+-- 
+2.7.4
+

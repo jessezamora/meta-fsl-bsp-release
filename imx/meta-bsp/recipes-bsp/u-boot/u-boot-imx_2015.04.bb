@@ -15,6 +15,9 @@ SRCREV = "ede7538aefc334ce3bbded966211c149659f19a6"
 
 S = "${WORKDIR}/git"
 
+SRC_URI_append = " file://0001-MLK-16703-HAB-Check-if-CSF-is-valid-before-authentic.patch \
+                   file://0002-MLK-14945-HAB-Check-if-IVT-valid-before-authenticati.patch "
+
 inherit fsl-u-boot-localversion
 
 LOCALVERSION ?= "imx_v2015.04_4.1.15_1.2.0_ga"
