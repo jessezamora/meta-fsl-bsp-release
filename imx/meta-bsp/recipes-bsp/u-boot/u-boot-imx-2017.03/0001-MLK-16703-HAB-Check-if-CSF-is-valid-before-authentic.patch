@@ -1,0 +1,180 @@
+From 19aec4cfd07635bd9cfcfca57bd20c9917856565 Mon Sep 17 00:00:00 2001
+From: Breno Lima <breno.lima@nxp.com>
+Date: Tue, 21 Nov 2017 13:40:16 -0200
+Subject: [PATCH] MLK-16703: HAB : Check if CSF is valid before authenticating
+ image
+
+For proper authentication users must check if the CSF is valid. This patch
+calls the csf_is_valid function prior to authenticating the image to parse
+the CSF and returns a failure if an invalid command is found as shown below.
+
+	Authenticate image from DDR location 0x12000000...
+	Check CSF for Write Data command before authenticating image
+
+	Error - WRITE Data command found
+
+	Authenticate zImage Fail, Please check
+
+Backported to branch imx_v2017.03_4.9.11_1.0.0_ga.
+
+Signed-off-by: Utkarsh Gupta <utkarsh.gupta@nxp.com>
+---
+ arch/arm/imx-common/hab.c             | 92 +++++++++++++++++++++++++++++++++++
+ arch/arm/include/asm/imx-common/hab.h | 24 +++++++++
+ 2 files changed, 116 insertions(+)
+
+diff --git a/arch/arm/imx-common/hab.c b/arch/arm/imx-common/hab.c
+index e332c2b..da4a8af 100644
+--- a/arch/arm/imx-common/hab.c
++++ b/arch/arm/imx-common/hab.c
+@@ -410,6 +410,92 @@ static bool is_hab_enabled(void)
+ 	return (reg & IS_HAB_ENABLED_BIT) == IS_HAB_ENABLED_BIT;
+ }
+ 
++/*
++ * Check whether addr lies between start and end and is within
++ * the length of the image
++ */
++static inline int chk_bounds(const uint8_t *addr, size_t bytes,
++				const uint8_t *start, const uint8_t *end)
++{
++	return (addr && (addr >= start) && (addr <= end) &&
++		((size_t)((end + 1) - addr) >= bytes))
++		? 1 : 0;
++}
++
++/* Get Length of each command in CSF */
++static inline int get_csf_cmd_hdr_len(const uint8_t *csf_hdr)
++{
++	if (*csf_hdr == HAB_CMD_HDR)
++		return sizeof(struct hab_hdr);
++
++	return HAB_HDR_LEN(*(const struct hab_hdr *)csf_hdr);
++}
++
++/*
++ * Check if CSF has Write data command
++ *
++ * If WRITE DATA command exists, then return failure
++ */
++static int csf_is_valid(int ivt_offset, ulong start_addr, size_t bytes)
++{
++	size_t offset = 0;
++	size_t cmd_hdr_len = 0;
++	size_t csf_hdr_len = 0;
++
++	const struct hab_ivt *ivt_initial = NULL;
++	const uint8_t *csf_hdr = NULL;
++	const uint8_t *end = NULL;
++	const uint8_t *start = (const uint8_t *)start_addr;
++
++	ivt_initial = (const struct hab_ivt *)(start + ivt_offset);
++
++	if (bytes != 0)
++		end = start + bytes - 1;
++	else
++		end = start;
++
++	/* Check that the CSF lies within the image bounds */
++	if ((start == 0) || (ivt_initial == NULL) ||
++	    (ivt_initial->csf == 0) ||
++	    !chk_bounds((const uint8_t *)ivt_initial->csf,
++			HAB_HDR_LEN(*(const struct hab_hdr *)ivt_initial->csf),
++			start, end)) {
++		puts("Error - CSF lies outside the image bounds\n");
++		return 0;
++	}
++
++	csf_hdr = (const uint8_t *)ivt_initial->csf;
++
++	if (*csf_hdr == HAB_CMD_HDR) {
++		csf_hdr_len = HAB_HDR_LEN(*(const struct hab_hdr *)csf_hdr);
++	} else {
++		puts("Error - CSF header command not found\n");
++		return 0;
++	}
++
++	/* Check for Write data command in CSF */
++	do {
++		switch (csf_hdr[offset]) {
++		case (HAB_CMD_WRT_DAT):
++			puts("Error - WRITE Data command found\n");
++			return 0;
++		default:
++			break;
++		}
++
++		cmd_hdr_len = get_csf_cmd_hdr_len(&csf_hdr[offset]);
++		if (!cmd_hdr_len) {
++			puts("Error - Invalid command length\n");
++			return 0;
++		}
++		offset += cmd_hdr_len;
++
++	} while (offset < csf_hdr_len);
++
++	/* Write Data command not found */
++	return 1;
++}
++
+ uint32_t authenticate_image(uint32_t ddr_start, uint32_t image_size)
+ {
+ 	uint32_t load_addr = 0;
+@@ -438,6 +524,12 @@ uint32_t authenticate_image(uint32_t ddr_start, uint32_t image_size)
+ 
+ 			start = ddr_start;
+ 			bytes = ivt_offset + IVT_SIZE + CSF_PAD_SIZE;
++
++			puts("Check CSF for Write Data command before ");
++			puts("authenticating image\n");
++			if (!csf_is_valid(ivt_offset, start, bytes))
++				return result;
++
+ #ifdef DEBUG
+ 			printf("\nivt_offset = 0x%x, ivt addr = 0x%x\n",
+ 			       ivt_offset, ddr_start + ivt_offset);
+diff --git a/arch/arm/include/asm/imx-common/hab.h b/arch/arm/include/asm/imx-common/hab.h
+index e0ff459..bf108ae 100644
+--- a/arch/arm/include/asm/imx-common/hab.h
++++ b/arch/arm/include/asm/imx-common/hab.h
+@@ -90,6 +90,23 @@ struct imx_sec_config_fuse_t {
+ 	int word;
+ };
+ 
++struct __packed hab_hdr {
++	uint8_t tag;              /* Tag field */
++	uint8_t len[2];           /* Length field in bytes (big-endian) */
++	uint8_t par;              /* Parameters field */
++};
++
++struct hab_ivt {
++	struct hab_hdr hdr;
++	uint32_t entry;
++	uint32_t reserved1;
++	uint32_t dcd;
++	uint32_t boot_data;
++	uint32_t self;
++	uint32_t csf;
++	uint32_t reserved2;
++};
++
+ #if defined(CONFIG_SECURE_BOOT)
+ extern struct imx_sec_config_fuse_t const imx_sec_config_fuse;
+ #endif
+@@ -143,6 +160,13 @@ typedef void hapi_clock_init_t(void);
+ #define HAB_CID_ROM 0 /**< ROM Caller ID */
+ #define HAB_CID_UBOOT 1 /**< UBOOT Caller ID*/
+ 
++#define HAB_CMD_HDR       0xD4  /* CSF Header */
++#define HAB_CMD_WRT_DAT   0xCC  /* Write Data */
++
++#define HAB_HDR_LEN(hdr)				\
++		((size_t)(((const struct hab_hdr *)&(hdr))->len[0] << 8) \
++		 + (size_t)((const struct hab_hdr *)&(hdr))->len[1])
++
+ /* ----------- end of HAB API updates ------------*/
+ 
+ uint32_t authenticate_image(uint32_t ddr_start, uint32_t image_size);
+-- 
+2.7.4
+
