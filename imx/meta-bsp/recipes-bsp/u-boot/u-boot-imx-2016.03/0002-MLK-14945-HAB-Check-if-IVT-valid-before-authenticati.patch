@@ -1,0 +1,49 @@
+From f4b36f12190648d96b5534743dc7538600941b95 Mon Sep 17 00:00:00 2001
+From: Breno Lima <breno.lima@nxp.com>
+Date: Tue, 21 Nov 2017 16:00:09 -0200
+Subject: [PATCH 2/2] MLK-14945 HAB: Check if IVT valid before authenticating
+ image
+
+For proper authentication users must check the IVT before authenticating the
+kernel image. If the IVT DCD pointer is not 0, display an error as shown below
+and return a boot failure.
+
+	Authenticate image from DDR location 0x12000000...
+        Error: DCD pointer must be 0
+
+        Authenticate zImage Fail, Please check
+
+Backported to branch imx_v2016.03_4.1.15_2.0.0_ga.
+
+Signed-off-by: Utkarsh Gupta <utkarsh.gupta@nxp.com>
+---
+ arch/arm/imx-common/hab.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/arm/imx-common/hab.c b/arch/arm/imx-common/hab.c
+index 6118ddf..fb6a014 100644
+--- a/arch/arm/imx-common/hab.c
++++ b/arch/arm/imx-common/hab.c
+@@ -553,6 +553,19 @@ uint32_t authenticate_image(uint32_t ddr_start, uint32_t image_size)
+ 				}
+ 			}
+ 
++			/* Report boot failure if DCD pointer is found in IVT */
++			unsigned char *dcd_ptr = (unsigned char *)(ddr_start +
++						 ivt_offset + 0xC);
++
++			do {
++				if (*dcd_ptr) {
++					puts("Error: DCD pointer must be 0\n");
++					return result;
++				}
++				dcd_ptr++;
++			} while (dcd_ptr < (unsigned char *)(ddr_start +
++						 ivt_offset + 0x10));
++
+ 			load_addr = (uint32_t)hab_rvt_authenticate_image(
+ 					HAB_CID_UBOOT,
+ 					ivt_offset, (void **)&start,
+-- 
+2.7.4
+

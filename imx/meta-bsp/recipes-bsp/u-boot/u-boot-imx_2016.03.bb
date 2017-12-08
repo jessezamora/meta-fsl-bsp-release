@@ -15,6 +15,9 @@ UBOOT_SRC ?= "git://source.codeaurora.org/external/imx/uboot-imx.git;protocol=ht
 SRC_URI = "${UBOOT_SRC};branch=${SRCBRANCH}"
 SRCREV = "a57b13b942d59719e3621179e98bd8a0ab235088"
 
+SRC_URI_append = " file://0001-MLK-16703-HAB-Check-if-CSF-is-valid-before-authentic.patch \
+                   file://0002-MLK-14945-HAB-Check-if-IVT-valid-before-authenticati.patch "
+
 S = "${WORKDIR}/git"
 
 inherit fsl-u-boot-localversion
