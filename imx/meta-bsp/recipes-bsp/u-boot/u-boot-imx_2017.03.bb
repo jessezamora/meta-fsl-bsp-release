@@ -17,7 +17,8 @@ UBOOT_SRC ?= "git://source.codeaurora.org/external/imx/uboot-imx.git;protocol=ht
 SRC_URI = "${UBOOT_SRC};branch=${SRCBRANCH}"
 SRCREV = "a2fea67d3eb3092f19f250d53a4a27fa1a0c815f"
 
-SRC_URI_append = " file://0001-MLK-16703-HAB-Check-if-CSF-is-valid-before-authentic.patch"
+SRC_URI_append = " file://0001-MLK-16703-HAB-Check-if-CSF-is-valid-before-authentic.patch \
+                   file://0001-imx-imx7-Support-for-Manufacturing-Protection.patch "
 
 S = "${WORKDIR}/git"
 

@@ -1,0 +1,456 @@
+From db2dbf622d3c711b2fbd85e6814992e023479dad Mon Sep 17 00:00:00 2001
+From: Breno Lima <breno.lima@nxp.com>
+Date: Tue, 14 Nov 2017 20:10:45 -0200
+Subject: [PATCH] imx: imx7 Support for Manufacturing Protection
+
+This code was originally developed by Raul Cardenas <raul.casas@nxp.com>
+and modified to be applied in U-Boot imx_v2017.03.
+
+More information about the initial submission can be seen
+in the link below:
+https://lists.denx.de/pipermail/u-boot/2016-February/245273.html
+
+i.MX7D has an a protection feature for Manufacturing process.
+This feature uses asymmetric encryption to sign and verify
+authenticated software handled between parties. This command
+enables the use of such feature.
+
+The private key is unique and generated once per device.
+And it is stored in secure memory and only accessible by CAAM.
+Therefore, the public key generation and signature functions
+are the only functions available for the user.
+
+The manufacturing-protection authentication process can be used to
+authenticate the chip to the OEM's server.
+
+Command usage:
+
+Print the public key for the device.
+- mfgprot pubk
+
+Generates Signature over given data.
+- mfgprot sign <data_address> <data_size>
+
+Signed-off-by: Raul Ulises Cardenas <raul.casas@nxp.com>
+Signed-off-by: Breno Lima <breno.lima@nxp.com>
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+Reviewed-by: Ye Li <ye.li@nxp.com>
+---
+ arch/arm/imx-common/Kconfig       |   9 +++
+ arch/arm/imx-common/Makefile      |   1 +
+ arch/arm/imx-common/cmd_mfgprot.c | 151 +++++++++++++++++++++++++++++++++++
+ drivers/crypto/fsl/Makefile       |   1 +
+ drivers/crypto/fsl/desc.h         |   1 +
+ drivers/crypto/fsl/fsl_mfgprot.c  | 162 ++++++++++++++++++++++++++++++++++++++
+ include/fsl_sec.h                 |   8 ++
+ 7 files changed, 333 insertions(+)
+ create mode 100644 arch/arm/imx-common/cmd_mfgprot.c
+ create mode 100644 drivers/crypto/fsl/fsl_mfgprot.c
+
+diff --git a/arch/arm/imx-common/Kconfig b/arch/arm/imx-common/Kconfig
+index be488df..f557897 100644
+--- a/arch/arm/imx-common/Kconfig
++++ b/arch/arm/imx-common/Kconfig
+@@ -45,6 +45,15 @@ config SECURE_BOOT
+ 	  This option enables the support for secure boot (HAB).
+ 	  See doc/README.mxc_hab for more details.
+ 
++config FSL_MFGPROT
++	bool "Support the 'mfgprot' command"
++	depends on SECURE_BOOT && ARCH_MX7
++	help
++	  This option enables the manufacturing protection command
++	  which can be used has a protection feature for Manufacturing
++	  process. With this tool is possible to authenticate the
++	  chip to the OEM's server.
++
+ config DBG_MONITOR
+ 	bool "Enable the AXI debug monitor"
+ 	depends on ARCH_MX6 || ARCH_MX7
+diff --git a/arch/arm/imx-common/Makefile b/arch/arm/imx-common/Makefile
+index 8972ec9..ac5537d 100644
+--- a/arch/arm/imx-common/Makefile
++++ b/arch/arm/imx-common/Makefile
+@@ -33,6 +33,7 @@ endif
+ ifeq ($(SOC),$(filter $(SOC),mx7))
+ obj-y 	+= cpu.o
+ obj-$(CONFIG_SYS_I2C_MXC) += i2c-mxv7.o
++obj-$(CONFIG_FSL_MFGPROT) += cmd_mfgprot.o
+ endif
+ ifeq ($(SOC),$(filter $(SOC),mx6 mx7))
+ obj-y 	+= cache.o init.o
+diff --git a/arch/arm/imx-common/cmd_mfgprot.c b/arch/arm/imx-common/cmd_mfgprot.c
+new file mode 100644
+index 0000000..41fea52
+--- /dev/null
++++ b/arch/arm/imx-common/cmd_mfgprot.c
+@@ -0,0 +1,151 @@
++/*
++ * Copyright 2016 Freescale Semiconductor, Inc.
++ * Copyright 2017 NXP
++ *
++ * SPDX-License-Identifier: GPL-2.0+
++ *
++ * These commands enable the use of the CAAM MPPubK-generation and MPSign
++ * functions in supported i.MX devices.
++ */
++
++#include <asm/byteorder.h>
++#include <asm/arch/clock.h>
++#include <linux/compiler.h>
++#include <command.h>
++#include <common.h>
++#include <environment.h>
++#include <fsl_sec.h>
++#include <mapmem.h>
++#include <memalign.h>
++
++DECLARE_GLOBAL_DATA_PTR;
++
++/**
++ * do_mfgprot() - Handle the "mfgprot" command-line command
++ * @cmdtp:  Command data struct pointer
++ * @flag:   Command flag
++ * @argc:   Command-line argument count
++ * @argv:   Array of command-line arguments
++ *
++ * Returns zero on success, CMD_RET_USAGE in case of misuse and negative
++ * on error.
++ */
++static int do_mfgprot(cmd_tbl_t *cmdtp, int flag, int argc, char *const argv[])
++{
++	u8 *m_ptr, *dgst_ptr, *c_ptr, *d_ptr, *dst_ptr;
++	char *pubk, *sign, *sel;
++	int m_size, i, ret;
++	u32 m_addr;
++
++	pubk = "pubk";
++	sign = "sign";
++	sel = argv[1];
++
++	/* Enable HAB clock */
++	u32 jr_size = 4;
++	u32 out_jr_size = sec_in32(CONFIG_SYS_FSL_JR0_ADDR + 0x102c);
++
++	if (out_jr_size != jr_size) {
++		hab_caam_clock_enable(1);
++		sec_init();
++	}
++
++	if (strcmp(sel, pubk) == 0) {
++		dst_ptr = malloc_cache_aligned(FSL_CAAM_MP_PUBK_BYTES);
++		if (!dst_ptr)
++			return -ENOMEM;
++
++		ret = gen_mppubk(dst_ptr);
++		if (ret) {
++			free(dst_ptr);
++			return ret;
++		}
++
++		/* Output results */
++		puts("Public key:\n");
++		for (i = 0; i < FSL_CAAM_MP_PUBK_BYTES; i++)
++			printf("%02X", (dst_ptr)[i]);
++		puts("\n");
++		free(dst_ptr);
++
++	} else if (strcmp(sel, sign) == 0) {
++		if (argc != 4)
++			return CMD_RET_USAGE;
++
++		m_addr = simple_strtoul(argv[2], NULL, 16);
++		m_size = simple_strtoul(argv[3], NULL, 10);
++		m_ptr = map_physmem(m_addr, m_size, MAP_NOCACHE);
++		if (!m_ptr)
++			return -ENOMEM;
++
++		dgst_ptr = malloc_cache_aligned(FSL_CAAM_MP_MES_DGST_BYTES);
++		if (!dgst_ptr) {
++			ret = -ENOMEM;
++			goto free_m;
++		}
++
++		c_ptr = malloc_cache_aligned(FSL_CAAM_MP_PRVK_BYTES);
++		if (!c_ptr) {
++			ret = -ENOMEM;
++			goto free_dgst;
++		}
++
++		d_ptr = malloc_cache_aligned(FSL_CAAM_MP_PRVK_BYTES);
++		if (!d_ptr) {
++			ret = -ENOMEM;
++			goto free_c;
++		}
++
++		ret = sign_mppubk(m_ptr, m_size, dgst_ptr, c_ptr, d_ptr);
++		if (ret)
++			goto free_d;
++
++		/* Output results */
++		puts("Message: ");
++		for (i = 0; i < m_size; i++)
++			printf("%02X ", (m_ptr)[i]);
++		puts("\n");
++
++		puts("Message Representative Digest(SHA-256):\n");
++		for (i = 0; i < FSL_CAAM_MP_MES_DGST_BYTES; i++)
++			printf("%02X", (dgst_ptr)[i]);
++		puts("\n");
++
++		puts("Signature:\n");
++		puts("C:\n");
++		for (i = 0; i < FSL_CAAM_MP_PRVK_BYTES; i++)
++			printf("%02X", (c_ptr)[i]);
++		puts("\n");
++
++		puts("d:\n");
++		for (i = 0; i < FSL_CAAM_MP_PRVK_BYTES; i++)
++			printf("%02X", (d_ptr)[i]);
++		puts("\n");
++free_d:
++	free(d_ptr);
++free_c:
++	free(c_ptr);
++free_dgst:
++	free(dgst_ptr);
++free_m:
++	unmap_sysmem(m_ptr);
++
++	} else {
++		return CMD_RET_USAGE;
++	}
++	return ret;
++}
++
++/***************************************************/
++static char mfgprot_help_text[] =
++	"Usage:\n"
++	 "Print the public key for Manufacturing Protection\n"
++	 "\tmfgprot pubk\n"
++	 "Generates a Manufacturing Protection signature\n"
++	 "\tmfgprot sign <data_addr> <size>";
++
++U_BOOT_CMD(
++	mfgprot, 4, 1, do_mfgprot,
++	"Manufacturing Protection\n",
++	mfgprot_help_text
++);
+diff --git a/drivers/crypto/fsl/Makefile b/drivers/crypto/fsl/Makefile
+index fd736cf..12887e5 100644
+--- a/drivers/crypto/fsl/Makefile
++++ b/drivers/crypto/fsl/Makefile
+@@ -8,3 +8,4 @@ obj-y += sec.o
+ obj-$(CONFIG_FSL_CAAM) += jr.o fsl_hash.o jobdesc.o error.o
+ obj-$(CONFIG_CMD_BLOB)$(CONFIG_CMD_DEKBLOB) += fsl_blob.o
+ obj-$(CONFIG_RSA_FREESCALE_EXP) += fsl_rsa.o
++obj-$(CONFIG_FSL_MFGPROT) += fsl_mfgprot.o
+diff --git a/drivers/crypto/fsl/desc.h b/drivers/crypto/fsl/desc.h
+index 081bce5..ed36482 100644
+--- a/drivers/crypto/fsl/desc.h
++++ b/drivers/crypto/fsl/desc.h
+@@ -739,6 +739,7 @@ struct __packed pdb_mp_sign {
+ };
+ 
+ #define PDB_MP_CSEL_SHIFT	17
++#define PDB_MP_CSEL_WIDTH	4
+ #define PDB_MP_CSEL_P256	0x3 << PDB_MP_CSEL_SHIFT	/* P-256 */
+ #define PDB_MP_CSEL_P384	0x4 << PDB_MP_CSEL_SHIFT	/* P-384 */
+ #define PDB_MP_CSEL_P521	0x5 << PDB_MP_CSEL_SHIFT	/* P-521 */
+diff --git a/drivers/crypto/fsl/fsl_mfgprot.c b/drivers/crypto/fsl/fsl_mfgprot.c
+new file mode 100644
+index 0000000..d08b7d1
+--- /dev/null
++++ b/drivers/crypto/fsl/fsl_mfgprot.c
+@@ -0,0 +1,162 @@
++/*
++ * Copyright 2014-2016 Freescale Semiconductor, Inc.
++ * Copyright 2017 NXP
++ *
++ * SPDX-License-Identifier:	GPL-2.0+
++ *
++ */
++
++#include <common.h>
++#include <errno.h>
++#include <fsl_sec.h>
++#include <memalign.h>
++#include "desc.h"
++#include "desc_constr.h"
++#include "jobdesc.h"
++#include "jr.h"
++
++/* Size of MFG descriptor */
++#define MFG_PUBK_DSC_WORDS 4
++#define MFG_SIGN_DSC_WORDS 8
++
++static void mfg_build_sign_dsc(u32 *dsc_ptr, const u8 *m, int size,
++			       u8 *dgst, u8 *c, u8 *d)
++{
++	u32 *dsc = dsc_ptr;
++	struct pdb_mp_sign *pdb;
++
++	init_job_desc_pdb(dsc, 0, sizeof(struct pdb_mp_sign));
++
++	pdb = (struct pdb_mp_sign *)desc_pdb(dsc);
++
++	/* Curve */
++	pdb->pdb_hdr = (PDB_MP_CSEL_P256);
++
++	/* Message Pointer */
++	pdb_add_ptr(&pdb->dma_addr_msg, virt_to_phys((void *)m));
++
++	/* mes-resp Pointer */
++	pdb_add_ptr(&pdb->dma_addr_hash, virt_to_phys((void *)dgst));
++
++	/* C Pointer */
++	pdb_add_ptr(&pdb->dma_addr_c_sig, virt_to_phys((void *)c));
++
++	/* d Pointer */
++	pdb_add_ptr(&pdb->dma_addr_d_sig, virt_to_phys((void *)d));
++
++	/* Message Size */
++	pdb->img_size = size;
++
++	/* MP PubK generate key command */
++	append_cmd(dsc, (CMD_OPERATION | OP_TYPE_DECAP_PROTOCOL |
++			 OP_PCLID_MP_SIGN));
++}
++
++static void mfg_build_pubk_dsc(u32 *dsc_ptr, u8 *dst)
++{
++	u32 *dsc = dsc_ptr;
++	struct pdb_mp_pub_k *pdb;
++
++	init_job_desc_pdb(dsc, 0, sizeof(struct pdb_mp_pub_k));
++
++	pdb = (struct pdb_mp_pub_k *)desc_pdb(dsc);
++
++	/* Curve */
++	pdb->pdb_hdr = (PDB_MP_CSEL_P256);
++
++	/* Message Pointer */
++	pdb_add_ptr(&pdb->dma_pkey, virt_to_phys((void *)dst));
++
++	/* MP Sign key command */
++	append_cmd(dsc, (CMD_OPERATION | OP_TYPE_DECAP_PROTOCOL |
++			 OP_PCLID_MP_PUB_KEY));
++}
++
++int gen_mppubk(u8 *dst)
++{
++	int size, ret;
++	u32 *dsc;
++
++	/* Job Descriptor initialization */
++	dsc = memalign(ARCH_DMA_MINALIGN,
++		       sizeof(uint32_t) * MFG_PUBK_DSC_WORDS);
++	if (!dsc) {
++		debug("Not enough memory for descriptor allocation\n");
++		return -ENOMEM;
++	}
++
++	mfg_build_pubk_dsc(dsc, dst);
++
++	size = roundup(sizeof(uint32_t) * MFG_PUBK_DSC_WORDS,
++		       ARCH_DMA_MINALIGN);
++	flush_dcache_range((unsigned long)dsc, (unsigned long)dsc + size);
++
++	size = roundup(FSL_CAAM_MP_PUBK_BYTES, ARCH_DMA_MINALIGN);
++	flush_dcache_range((unsigned long)dst, (unsigned long)dst + size);
++
++	/* Execute Job Descriptor */
++	puts("\nGenerating Manufacturing Protection Public Key\n");
++
++	ret = run_descriptor_jr(dsc);
++	if (ret) {
++		debug("Error in public key generation %d\n", ret);
++		goto err;
++	}
++
++	size = roundup(FSL_CAAM_MP_PUBK_BYTES, ARCH_DMA_MINALIGN);
++	invalidate_dcache_range((unsigned long)dst, (unsigned long)dst + size);
++err:
++	free(dsc);
++	return ret;
++}
++
++int sign_mppubk(const u8 *m, int data_size, u8 *dgst, u8 *c, u8 *d)
++{
++	int size, ret;
++	u32 *dsc;
++
++	/* Job Descriptor initialization */
++	dsc = memalign(ARCH_DMA_MINALIGN,
++		       sizeof(uint32_t) * MFG_SIGN_DSC_WORDS);
++	if (!dsc) {
++		debug("Not enough memory for descriptor allocation\n");
++		return -ENOMEM;
++	}
++
++	mfg_build_sign_dsc(dsc, m, data_size, dgst, c, d);
++
++	size = roundup(sizeof(uint32_t) * MFG_SIGN_DSC_WORDS,
++		       ARCH_DMA_MINALIGN);
++	flush_dcache_range((unsigned long)dsc, (unsigned long)dsc + size);
++
++	size = roundup(data_size, ARCH_DMA_MINALIGN);
++	flush_dcache_range((unsigned long)m, (unsigned long)m + size);
++
++	size = roundup(FSL_CAAM_MP_MES_DGST_BYTES, ARCH_DMA_MINALIGN);
++	flush_dcache_range((unsigned long)dgst, (unsigned long)dgst + size);
++
++	size = roundup(FSL_CAAM_MP_PRVK_BYTES, ARCH_DMA_MINALIGN);
++	flush_dcache_range((unsigned long)c, (unsigned long)c + size);
++	flush_dcache_range((unsigned long)d, (unsigned long)d + size);
++
++	/* Execute Job Descriptor */
++	puts("\nSigning message with Manufacturing Protection Public Key\n");
++
++	ret = run_descriptor_jr(dsc);
++	if (ret) {
++		debug("Error in public key generation %d\n", ret);
++		goto err;
++	}
++
++	size = roundup(FSL_CAAM_MP_MES_DGST_BYTES, ARCH_DMA_MINALIGN);
++	invalidate_dcache_range((unsigned long)dgst,
++				(unsigned long)dgst + size);
++
++	size = roundup(FSL_CAAM_MP_PRVK_BYTES, ARCH_DMA_MINALIGN);
++	invalidate_dcache_range((unsigned long)c, (unsigned long)c + size);
++	invalidate_dcache_range((unsigned long)d, (unsigned long)d + size);
++
++err:
++	free(dsc);
++	return ret;
++}
+diff --git a/include/fsl_sec.h b/include/fsl_sec.h
+index 61c671d..584f43e 100644
+--- a/include/fsl_sec.h
++++ b/include/fsl_sec.h
+@@ -294,6 +294,10 @@ struct sg_entry {
+ 
+ #endif
+ 
++#define FSL_CAAM_MP_PUBK_BYTES		    64
++#define FSL_CAAM_MP_PRVK_BYTES		    32
++#define FSL_CAAM_MP_MES_DGST_BYTES	    32
++
+ /* blob_dek:
+  * Encapsulates the src in a secure blob and stores it dst
+  * @src: reference to the plaintext
+@@ -303,6 +307,10 @@ struct sg_entry {
+  */
+ int blob_dek(const u8 *src, u8 *dst, u8 len);
+ 
++int gen_mppubk(u8 *dst);
++
++int sign_mppubk(const u8 *m, int data_size, u8 *dgst, u8 *c, u8 *d);
++
+ #if defined(CONFIG_ARCH_C29X)
+ int sec_init_idx(uint8_t);
+ #endif
+-- 
+2.7.4
+
