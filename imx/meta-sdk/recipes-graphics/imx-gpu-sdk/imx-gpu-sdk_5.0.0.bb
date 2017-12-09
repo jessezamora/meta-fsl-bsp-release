@@ -15,7 +15,7 @@ DEPENDS_append_mx8      = \
         bb.utils.contains('DISTRO_FEATURES',     'x11', '', \
                                                         ' glslang-native vulkan-loader-layers', d), d)}"
 
-GPU_SDK_SRC ?= "git://source.codeaurora.org/external/imx/gtec-demo-framework.git;protocol=https"
+GPU_SDK_SRC ?= "git://github.com/NXPmicro/gtec-demo-framework.git;protocol=http"
 GPU_SDK_SRC_BRANCH ?= "RC"
 SRC_URI = "${GPU_SDK_SRC};branch=${GPU_SDK_SRC_BRANCH}"
 SRCREV = "15d3b5476c23f5f19a9e01b17b2f38b8fe4fb1a1"
