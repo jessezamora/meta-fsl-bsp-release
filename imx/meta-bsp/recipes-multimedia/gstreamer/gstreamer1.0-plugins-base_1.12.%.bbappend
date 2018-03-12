@@ -22,7 +22,7 @@ SRCBRANCH = "MM_04.03.04_1801_L4.9.51_MX8M_GA"
 SRC_URI_append_imx = " \
     ${GST1.0-PLUGINS-BASE_SRC};branch=${SRCBRANCH} \
 "
-SRCREV_imx = "3db0d15f07ffb1edaf7daac1d5337a5c787cfeab"
+SRCREV_imx = "3a615cab2e22e133048157ba107dc6c24e08c7e0"
 
 EXTRA_AUTORECONF = ""
 
