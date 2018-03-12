@@ -28,11 +28,6 @@ do_install_append() {
         rm -rf ${D}${base_libdir}/firmware/hifi4
     fi
 
-    # Copy DCSS firmware to /lib/firmware
-    if [ -e ${D}${base_libdir}/firmware/dcss/dcss.fw ]; then
-        cp ${D}${base_libdir}/firmware/dcss/dcss.fw ${D}${base_libdir}/firmware
-    fi
-
     #1FD_BCM89359
     install -d ${D}${base_libdir}/firmware/bcm/1FD_BCM89359
     cp -rfv git/brcm/1FD_BCM89359/*.bin ${D}${base_libdir}/firmware/bcm/1FD_BCM89359
@@ -66,4 +61,4 @@ do_deploy () {
 }
 
 PACKAGES =+ "${PN}-dcss"
-FILES_${PN}-dcss = "${base_libdir}/firmware/dcss.fw ${base_libdir}/firmware/dcss"
+FILES_${PN}-dcss = "${base_libdir}/firmware/dcss"
