@@ -12,7 +12,7 @@ SRCBRANCH = "imx-1.14.x"
 SRC_URI = " \
     ${GST1.0-PLUGINS-GOOD_SRC};branch=${SRCBRANCH} \
 "
-SRCREV = "10e1786736c759864984fc29d66cce022afef321"
+SRCREV = "10e1786736c759864984fc29d66cce022afef321" 
 
 DEPENDS_append = " libdrm"
 
