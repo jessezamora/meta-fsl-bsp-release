@@ -14,7 +14,7 @@ SRCREV = "be2b8e60d85074c1ed24afa3c4d35ffb7d28b74b"
 
 S = "${WORKDIR}/git"
 
-DEPENDS_append        = " alsa-lib"
+DEPENDS_append        = " alsa-lib libdrm"
 DEPENDS_append_mx7ulp = " virtual/kernel imx-lib"
 DEPENDS_append_mx8    = " virtual/kernel"
 DEPENDS_append_imxvpu = " virtual/imxvpu"
