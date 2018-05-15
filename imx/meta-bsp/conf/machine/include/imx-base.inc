@@ -97,7 +97,6 @@ MACHINE_SOCARCH_FILTER_append_imxgpu = " \
     virtual/libg2d \
     libgal-imx \
     virtual/libopenvg \
-    virtual/wayland-egl \
     cairo \
     pango \
 "
