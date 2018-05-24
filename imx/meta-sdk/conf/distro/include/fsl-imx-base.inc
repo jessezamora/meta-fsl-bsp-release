@@ -1,6 +1,6 @@
 DISTRO = "fsl-imx"
 DISTRO_NAME = "NXP i.MX Release Distro"
-DISTRO_VERSION = "4.9-rocko"
+DISTRO_VERSION = "4.9.88-2.1.0_8mm_alpha"
 
 DISTRO_CODENAME = "rocko"
 SDK_VENDOR = "-pokysdk"
