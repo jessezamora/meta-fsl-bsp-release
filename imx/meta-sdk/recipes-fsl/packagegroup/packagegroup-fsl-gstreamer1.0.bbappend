@@ -6,3 +6,5 @@ RDEPENDS_${PN}-network-base_remove = " gstreamer1.0-plugins-good-souphttpsrc"
 RDEPENDS_${PN}-network-base += " gstreamer1.0-plugins-good-soup"
 
 RDEPENDS_${PN} += " gstreamer1.0-rtsp-server"
+
+RDEPENDS_${PN}_append_mx8mm = " imx-vpu-hantro"
