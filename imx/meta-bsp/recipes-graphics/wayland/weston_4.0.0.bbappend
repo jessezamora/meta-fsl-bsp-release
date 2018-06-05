@@ -13,10 +13,6 @@ SRC_URI_prepend = "${WESTON_SRC};branch=${SRCBRANCH} "
 SRCREV = "7c3e9f147c847db503c9a0fe0cc36f5353569ba7"
 S = "${WORKDIR}/git"
 
-# Define RECIPE_SYSROOT since it doesn't exist in morty
-# for this backported recipe
-RECIPE_SYSROOT = "${STAGING_DIR}/${MACHINE}"
-
 # Use FBDEV for parts that support it
 EXTRA_OECONF_IMX_FBDEV          = ""
 EXTRA_OECONF_IMX_FBDEV_imxfbdev = "WESTON_NATIVE_BACKEND=fbdev-backend.so"
