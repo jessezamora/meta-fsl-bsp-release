@@ -43,7 +43,7 @@ SRC_URI = " \
     ${GST1.0-PLUGINS-BAD_SRC};branch=${SRCBRANCH} \
 "
 
-SRCREV = "8e1857e8ae6ffb33d3ff025b601e8abfaae1d07d"
+SRCREV = "0b0b9294e4020c21f53e27be2eec6f7ad166023f"
 
 # This remove "--exclude=autopoint" option from autoreconf argument to avoid
 # configure.ac:30: error: required file './ABOUT-NLS' not found
