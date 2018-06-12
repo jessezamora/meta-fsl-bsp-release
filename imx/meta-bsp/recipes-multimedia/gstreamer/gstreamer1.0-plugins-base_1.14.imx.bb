@@ -38,7 +38,7 @@ SRCREV = "04bafd740a52757f12496206cfabe282835a1eb5"
 
 EXTRA_AUTORECONF = ""
 
-FILES_${PN} += "/usr/lib/gstreamer-1.0/include"
+FILES_${PN} += "${libdir}/gstreamer-1.0/include"
 
 PV = "1.14.0.imx"
 
