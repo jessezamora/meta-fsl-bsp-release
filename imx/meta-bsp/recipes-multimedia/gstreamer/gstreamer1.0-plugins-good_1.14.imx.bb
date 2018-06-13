@@ -10,7 +10,7 @@ SRCBRANCH = "MM_04.04.00_1805_L4.9.88_MX8QXP_BETA2"
 SRC_URI = " \
     ${GST1.0-PLUGINS-GOOD_SRC};branch=${SRCBRANCH} \
 "
-SRCREV = "e323b5078da4dc2a125d32c5b8cdbd267b481d4d"
+SRCREV = "cd1590631c8ccec24bda3085fdb2ccbba2f78a40"
 
 DEPENDS_append = " libdrm"
 
