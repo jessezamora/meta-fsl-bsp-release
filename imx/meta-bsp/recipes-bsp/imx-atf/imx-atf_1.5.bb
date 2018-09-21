@@ -10,7 +10,7 @@ inherit fsl-eula-unpack pkgconfig deploy
 PV = "1.5+git${SRCPV}"
 
 ATF_SRC ?= "git://source.codeaurora.org/external/imx/imx-atf.git;protocol=https"
-SRCBRANCH = "imx_1.5.y"
+SRCBRANCH = "imx_4.14.62_1.0.0_beta"
 
 SRC_URI = "${ATF_SRC};branch=${SRCBRANCH}"
 SRCREV = "933dd5c8457a5e3c5b5e043ff90c128954164b87"
