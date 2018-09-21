@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=69663ab153298557a59c67a60a743e5b"
 
 inherit pythonnative systemd
 
-SRCBRANCH = "imx_3.2.y"
+SRCBRANCH = "imx_4.14.62_1.0.0_beta"
 OPTEE_CLIENT_SRC ?= "git://source.codeaurora.org/external/imx/imx-optee-client.git;protocol=https"
 SRC_URI = "${OPTEE_CLIENT_SRC};branch=${SRCBRANCH}"
 SRCREV = "2d542f2074223fde918e68efa4a9ff37f927e604" 
