@@ -4,8 +4,6 @@
 
 require imx-codec.inc
 
-PACKAGECONFIG_remove_imxvpuamphion = "vpu"
-
 LIC_FILES_CHKSUM = "file://COPYING;md5=5ab1a30d0cd181e3408077727ea5a2db"
 
 SRC_URI[md5sum] = "24fc30018e3c1a005cca62b8c399c098"
