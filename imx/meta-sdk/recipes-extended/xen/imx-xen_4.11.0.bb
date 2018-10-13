@@ -1,7 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 require xen.inc
 
-SRCBRANCH = "imx_4.11.62_1.0.0_beta"
+SRCBRANCH = "imx_4.14.62_1.0.0_beta"
 XEN_SRC ?= "git://source.codeaurora.org/external/imx/imx-xen.git;protocol=https"
 
 SRC_URI = " \
@@ -9,7 +9,7 @@ SRC_URI = " \
     file://tools-xentop-vwprintw.patch \
     "
 
-SRCREV = "ae711d2ac4d32612d8733ccbf4d01af544a8b48c"
+SRCREV = "1b42481fcc957790540c69c6e5568cc3e68757ad"
 
 S = "${WORKDIR}/git"
 
