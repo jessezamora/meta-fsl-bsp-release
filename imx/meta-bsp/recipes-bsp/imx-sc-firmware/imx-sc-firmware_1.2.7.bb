@@ -2,7 +2,7 @@
 # Copyright 2017-2019 NXP
 
 DESCRIPTION = "i.MX System Controller Firmware"
-LICENSE = "MIT"
+LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6c12031a11b81db21cdfe0be88cac4b3"
 SECTION = "BSP"
 
