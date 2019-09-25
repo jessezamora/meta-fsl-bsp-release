@@ -2,8 +2,8 @@
 # Copyright 2017-2018 NXP
 
 DESCRIPTION = "i.MX System Controller Firmware"
-LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=6dfb32a488e5fd6bae52fbf6c7ebb086"
+LICENSE = "Proprietary"
+LIC_FILES_CHKSUM = "file://COPYING;md5=6c12031a11b81db21cdfe0be88cac4b3"
 SECTION = "BSP"
 
 inherit fsl-eula-unpack pkgconfig deploy
