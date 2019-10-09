@@ -59,9 +59,9 @@ DCD_NAME_mx8qm = "imx8qm_dcd.cfg.tmp"
 DCD_NAME_mx8qxp = "imx8qx_dcd.cfg.tmp"
 
 SECO_FIRMWARE ?= ""
-SECO_FIRMWARE_mx8qm  = "imx8qmb0-ahab-container.img"
-SECO_FIRMWARE_mx8qxp = "imx8qxb0-ahab-container.img"
-SECO_FIRMWARE_imx8qxpC0mek  = "imx8qxc0-ahab-container.img"
+SECO_FIRMWARE_mx8qm  = "mx8qmb0-ahab-container.img"
+SECO_FIRMWARE_mx8qxp = "mx8qxb0-ahab-container.img"
+SECO_FIRMWARE_imx8qxpC0mek  = "mx8qxc0-ahab-container.img"
 
 UBOOT_NAME = "u-boot-${MACHINE}.bin-${UBOOT_CONFIG}"
 BOOT_CONFIG_MACHINE = "${BOOT_NAME}-${MACHINE}-${UBOOT_CONFIG}.bin"
