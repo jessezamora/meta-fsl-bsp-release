@@ -24,7 +24,7 @@ do_compile () {
 
     oe_runmake -C iMX8M -f soc.mak mkimage_imx8
 
-    oe_runmake -C iMX8QM -f soc.mak imx8qm_dcd.cfg.tmp
+    oe_runmake -C iMX8QM REV=${REV_CHIP} -f soc.mak imx8qm_dcd.cfg.tmp
     oe_runmake -C iMX8QX REV=${REV_CHIP} -f soc.mak imx8qx_dcd.cfg.tmp
 }
 
