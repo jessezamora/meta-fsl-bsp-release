@@ -12,8 +12,8 @@ inherit native deploy
 
 S = "${WORKDIR}/git"
 
-REV ?= "B0"
-REV_imx8qxpC0mek = "C0"
+REV_CHIP ?= "B0"
+REV_CHIP_imx8qxpC0mek = "C0"
 
 CFLAGS = "-O2 -Wall -std=c99 -I ${STAGING_INCDIR} -L ${STAGING_LIBDIR}"
 
@@ -25,7 +25,7 @@ do_compile () {
     oe_runmake -C iMX8M -f soc.mak mkimage_imx8
 
     oe_runmake -C iMX8QM -f soc.mak imx8qm_dcd.cfg.tmp
-    oe_runmake -C iMX8QX ${REV} -f soc.mak imx8qx_dcd.cfg.tmp
+    oe_runmake -C iMX8QX REV=${REV_CHIP} -f soc.mak imx8qx_dcd.cfg.tmp
 }
 
 BOOT_TOOLS = "imx-boot-tools"
