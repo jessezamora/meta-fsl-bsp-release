@@ -75,6 +75,9 @@ SOC_TARGET_mx8mq  = "iMX8M"
 SOC_TARGET_mx8mm  = "iMX8MM"
 SOC_TARGET_mx8mn  = "iMX8MN"
 
+REV_OPTION ?= ""
+REV_OPTION_imx8qxpC0mek = "REV=C0"
+
 SOC_DIR ?= "${SOC_TARGET}"
 SOC_DIR_mx8m = "iMX8M"
 
@@ -139,8 +142,8 @@ do_compile () {
 
     # mkimage for i.MX8
     for target in ${IMXBOOT_TARGETS}; do
-        echo "building ${SOC_TARGET} - ${target}"
-        make SOC=${SOC_TARGET} ${target}
+        echo "building ${SOC_TARGET} - ${REV_OPTION} ${target}"
+        make SOC=${SOC_TARGET} ${REV_OPTION} ${target}
         if [ -e "${S}/${SOC_DIR}/flash.bin" ]; then
             cp ${S}/${SOC_DIR}/flash.bin ${S}/${BOOT_CONFIG_MACHINE}-${target}
         fi
