@@ -12,7 +12,6 @@ ML_PKGS = " \
     tensorflow-lite \
     tensorflow \
     onnxruntime \
-    ml-security \
 "
 RDEPENDS_${PN} = " \
     ${ML_PKGS} \
