@@ -1,5 +1,5 @@
 # Copyright (C) 2015 Freescale Semiconductor
-# Copyright 2017-2018 NXP
+# Copyright 2017-2019 NXP
 # Released under the MIT license (see COPYING.MIT for the terms)
 
 DESCRIPTION = "Freescale Image to validate i.MX machines. \
@@ -18,6 +18,7 @@ inherit core-image
 IMAGE_FEATURES += " \
     debug-tweaks \
     tools-profile \
+    package-management \
     splash \
     nfs-server \
     tools-debug \
