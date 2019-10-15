@@ -13,7 +13,7 @@ inherit native deploy
 S = "${WORKDIR}/git"
 
 REV_CHIP ?= "B0"
-REV_CHIP_imx8qxpC0mek = "C0"
+REV_CHIP_imx8qxpc0mek = "C0"
 
 CFLAGS = "-O2 -Wall -std=c99 -I ${STAGING_INCDIR} -L ${STAGING_LIBDIR}"
 
