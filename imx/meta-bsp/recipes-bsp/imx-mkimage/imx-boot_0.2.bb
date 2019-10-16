@@ -62,6 +62,7 @@ SECO_FIRMWARE ?= ""
 SECO_FIRMWARE_mx8qm  = "mx8qmb0-ahab-container.img"
 SECO_FIRMWARE_mx8qxp = "mx8qxb0-ahab-container.img"
 SECO_FIRMWARE_imx8qxpc0mek  = "mx8qxc0-ahab-container.img"
+SECO_FIRMWARE_imx8qxpc0lpddr4arm2  = "mx8qxc0-ahab-container.img"
 
 UBOOT_NAME = "u-boot-${MACHINE}.bin-${UBOOT_CONFIG}"
 BOOT_CONFIG_MACHINE = "${BOOT_NAME}-${MACHINE}-${UBOOT_CONFIG}.bin"
@@ -77,6 +78,7 @@ SOC_TARGET_mx8mn  = "iMX8MN"
 
 REV_OPTION ?= ""
 REV_OPTION_imx8qxpc0mek = "REV=C0"
+REV_OPTION_imx8qxpc0lpddr4arm2 = "REV=C0"
 
 SOC_DIR ?= "${SOC_TARGET}"
 SOC_DIR_mx8m = "iMX8M"
