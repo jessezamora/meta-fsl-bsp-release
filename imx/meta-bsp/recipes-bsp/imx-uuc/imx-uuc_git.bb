@@ -1,5 +1,5 @@
 # Copyright (C) 2016 Freescale Semiconductor
-# Copyright 2017-2018 NXP
+# Copyright 2017-2019 NXP
 SUMMARY = "A Daemon wait for NXP mfgtools host's command"
 SECTION = "base"
 DEPENDS = "virtual/kernel dosfstools-native"
@@ -12,7 +12,7 @@ PR = "r1"
 PV = "0.5.1+git${SRCPV}"
 
 SRC_URI = "git://github.com/nxpmicro/imx-uuc.git;protocol=https"
-SRCREV = "114d98b55f7a234e1f4102299396f3c9b9c3072d"
+SRCREV = "d6afb27e55d73d7ad08cd2dd51c784d8ec9694dc"
 
 S = "${WORKDIR}/git"
 
