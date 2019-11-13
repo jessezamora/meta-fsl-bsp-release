@@ -1,6 +1,8 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 IMX_PATCHES = " file://0001-Fix-pulseaudio-mutex-issue-when-do-pause-in-gstreame.patch \
+                file://0002-alsa-mixer-Prioritize-hdmi-mappings-over-iec958-mapp.patch \
+                file://0003-alsa-mixer-make-the-mono-mapping-a-fallback-only.patch \
 "
 SRC_URI_append_mx6 = "${IMX_PATCHES}"
 SRC_URI_append_mx7 = "${IMX_PATCHES}"
