@@ -126,8 +126,8 @@ do_compile () {
 
     else
         echo 8QX boot binary build
-        cp ${DEPLOY_DIR_IMAGE}/imx8qx_m4_TCM_srtm_demo.bin ${S}/${SOC_DIR}/m40_tcm.bin
-        cp ${DEPLOY_DIR_IMAGE}/imx8qx_m4_TCM_srtm_demo.bin ${S}/${SOC_DIR}/m4_image.bin
+        cp ${DEPLOY_DIR_IMAGE}/imx8qx_m4_TCM_power_mode_switch.bin ${S}/${SOC_DIR}/m40_tcm.bin
+        cp ${DEPLOY_DIR_IMAGE}/imx8qx_m4_TCM_power_mode_switch.bin ${S}/${SOC_DIR}/m4_image.bin
         cp ${DEPLOY_DIR_IMAGE}/${SECO_FIRMWARE} ${S}/${SOC_DIR}/
         cp ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/${SC_FIRMWARE_NAME} ${S}/${SOC_DIR}/scfw_tcm.bin
         cp ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/${ATF_MACHINE_NAME} ${S}/${SOC_DIR}/bl31.bin
