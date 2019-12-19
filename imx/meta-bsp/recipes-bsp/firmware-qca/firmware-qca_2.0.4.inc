@@ -1,14 +1,14 @@
-# Copyright 2018 NXP
+# Copyright 2018-2019 NXP
 
 SUMMARY = "Qualcomm Wi-Fi and Bluetooth firmware"
 SECTION = "base"
 LICENSE = "Proprietary"
-LIC_FILES_CHKSUM = "file://COPYING;md5=6dfb32a488e5fd6bae52fbf6c7ebb086 \
+LIC_FILES_CHKSUM = "file://COPYING;md5=6c12031a11b81db21cdfe0be88cac4b3 \
                     file://QUALCOMM_ATHEROS_LICENSE_AGREEMENT.pdf;md5=e629669cf17f6a2a6872e067582986e3 \
 "
 
-SRC_URI[md5sum] = "29e949d1037a464dcb7e71b45a97280e"
-SRC_URI[sha256sum] = "d61220c97aa1e5a875234a95934957b02274cb87c2be74e119e4f093907cf68f"
+SRC_URI[md5sum] = "5943dc45bbac60a5573063475e58e4fb"
+SRC_URI[sha256sum] = "0554195e5d50e87c1afad3ec10727d415ee9bd6c49b660a83949102c3bdec5fe"
 
 inherit fsl-eula2-unpack2
 
