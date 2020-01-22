@@ -34,6 +34,4 @@ INSANE_SKIP_${PN} += "ldflags"
 FILES_${PN} = "${libdir}/libg2d* /opt"
 FILES_${PN}-dev = "${libdir}/libg2d${SOLIBSDEV} ${includedir}"
 
-# Compatible only with i.MX DPU
-COMPATIBLE_MACHINE = "(^$)"
-COMPATIBLE_MACHINE_imxdpu = "${MACHINE}"
+COMPATIBLE_MACHINE = "(imxdpu)"
