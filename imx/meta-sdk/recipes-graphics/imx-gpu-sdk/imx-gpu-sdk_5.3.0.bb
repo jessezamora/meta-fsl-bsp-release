@@ -105,6 +105,4 @@ RPROVIDES_${PN} = "fsl-gpu-sdk"
 RREPLACES_${PN} = "fsl-gpu-sdk"
 RCONFLICTS_${PN} = "fsl-gpu-sdk"
 
-# Compatible only with i.MX GPU
-COMPATIBLE_MACHINE = "(^$)"
-COMPATIBLE_MACHINE_imxgpu = "${MACHINE}"
+COMPATIBLE_MACHINE = "(imxgpu)"

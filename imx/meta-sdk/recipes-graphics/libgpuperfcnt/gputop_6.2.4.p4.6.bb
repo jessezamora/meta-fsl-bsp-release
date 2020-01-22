@@ -29,6 +29,4 @@ PACKAGES = "${PN}"
 FILES_${PN} += "${mandir}/*"
 INSANE_SKIP_${PN} += "installed-vs-shipped dev-so rpaths dev-deps"
 
-# Compatible only with i.MX with GPU
-COMPATIBLE_MACHINE        = "(^$)"
-COMPATIBLE_MACHINE_imxgpu = "${MACHINE}"
+COMPATIBLE_MACHINE = "(imxgpu)"
