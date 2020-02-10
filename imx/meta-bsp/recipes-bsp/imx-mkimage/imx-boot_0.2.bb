@@ -82,6 +82,7 @@ REV_OPTION_mx8qxpc0 = "REV=C0"
 
 SOC_DIR ?= "${SOC_TARGET}"
 SOC_DIR_mx8m = "iMX8M"
+SOC_DIR_mx8dx = "iMX8QX"
 
 DEPLOY_OPTEE = "${@bb.utils.contains('COMBINED_FEATURES', 'optee', 'true', 'false', d)}"
 
