@@ -6,7 +6,7 @@ DESCRIPTION = "GPU G2D library and apps for i.MX with 2D GPU and DPU"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1b4db4b25c3a1e422c0c0ed64feb65d2"
 
-RDEPENDS_${PN} = "libgal-imx libdrm"
+RDEPENDS_${PN} = "libgal-imx libdrm libopencl-imx"
 
 PROVIDES += "virtual/libg2d"
 
