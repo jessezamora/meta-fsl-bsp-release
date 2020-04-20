@@ -1,7 +1,7 @@
-i.MX Linux Yocto Project BSP 4.14.98_2.3.1 Release
+i.MX Linux Yocto Project BSP 4.14.98_2.3.2 Release
 =====================================================
 
-The following boards were tested in this release.
+The following boards were tested with automation only in this release.
 
    * NXP i.MX 6QuadPlus SABRE Device (imx6qpsabresd)
    * NXP i.MX 6QuadPlus SABRE Auto (imx6qpsabreauto)
@@ -24,6 +24,7 @@ The following boards were tested in this release.
    * NXP i.MX 8MQuad EVK (imx8mqevk)
    * NXP i.MX 8MMini EVK (imx8mmevk)
    * NXP i.MX 8MNano EVK (imx8mnevk)
+   * NXP i.MX 8MNano LPDDR4 EVK (imx8mnlpddr4evk.conf)
    * NXP i.MX 8MNano LPDDR4 EVK (imx8mnlpddr4evk)
    * NXP i.MX 8QuadMax LPDDR4 ARM2 (imx8qmlpddr4arm2)
    * NXP i.MX 8QuadMax MEK (imx8qmmek)
