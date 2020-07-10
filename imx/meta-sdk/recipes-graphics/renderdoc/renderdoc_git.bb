@@ -15,6 +15,7 @@ SRC_URI = "git://github.com/baldurk/renderdoc.git;branch=v1.x \
            file://0004-Pass-memory-checking-when-replaying-captures.patch \
            file://0005-Add-build-script-for-i.MX8-target.patch \
            file://0006-Copyrights-Update-copyrights.patch \
+           file://0007-renderdoc-CMakeLists.txt-Set-TARGET-DESTINATION-usin.patch \
 "
 
 SRC_URI[md5sum] = "4b99f9ea6e3f57c0bb6b5a34aa60b03b"
@@ -44,4 +45,8 @@ FILES_${PN} += "${libdir}/* ${includedir}"
 
 do_compile_prepend () {
     sed -i 's/c++ /g++ /g' ${B}/build.ninja
+
+    if [ "${base_libdir}" != "lib" ]; then
+        export LIB_SUFFIX="64"
+    fi
 }
