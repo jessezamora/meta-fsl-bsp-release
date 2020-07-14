@@ -1,0 +1,27 @@
+From c59e651237c024ee14c7fa0187079f50e561fb02 Mon Sep 17 00:00:00 2001
+From: Cristinel Panfir <cristinel.panfir@nxp.com>
+Date: Tue, 14 Jul 2020 06:21:40 +0000
+Subject: [PATCH] multilib: Fix hardcoded lib in firmwaredir
+
+Signed-off-by: Cristinel Panfir <cristinel.panfir@nxp.com>
+---
+ scripts/include.mk | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/include.mk b/scripts/include.mk
+index 028f0ab..f1ae8d3 100644
+--- a/scripts/include.mk
++++ b/scripts/include.mk
+@@ -27,7 +27,8 @@ datarootdir	?= $(prefix)/share
+ datadir		?= $(datarootdir)
+ man8dir		?= $(datarootdir)/man/man8
+ completionsdir	?= /usr/share/bash-completion/completions
+-firmwaredir ?= /lib/firmware
++base_libdir	?= /lib
++firmwaredir	?= $(base_libdir)/firmware
+ 
+ # all directories listed here will be created using a generic rule below
+ INSTALL_DIRECTORIES := $(sbindir)		\
+-- 
+2.7.4
+
