@@ -7,10 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8cf95184c220e247b9917e7244124c5a"
 PE = "1"
 
 #BRCM firmware git
-SRCBRANCH ?= "master"
-
 SRC_URI = "${FSL_MIRROR}/firmware-imx-${PV}.bin;fsl-eula=true \
-           git://git.freescale.com/imx/imx-firmware.git;branch=${SRCBRANCH};destsuffix=${S}/git "
+           git://github.com/NXP/imx-firmware.git;protocol=https;branch=master;destsuffix=imx-firmware;name=imx-firmware"
 
 inherit fsl-eula-unpack
 
