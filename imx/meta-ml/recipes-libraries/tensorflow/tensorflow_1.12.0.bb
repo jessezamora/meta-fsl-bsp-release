@@ -8,6 +8,7 @@ SRC_URI = " \
 	git://github.com/tensorflow/tensorflow.git \
 	file://download.patch \
 	file://makefile.patch \
+	file://download-eigen-tf.patch \
 "
 SRCREV = "a6d8ffae097d0132989ae4688d224121ec6d8f35"
 

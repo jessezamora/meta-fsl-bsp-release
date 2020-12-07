@@ -8,6 +8,7 @@ TENSORFLOW_LITE_SRC ?= "git://source.codeaurora.org/external/imx/tensorflow-imx.
 SRCBRANCH = "imx-v1.13.2"
 SRC_URI = "${TENSORFLOW_LITE_SRC};branch=${SRCBRANCH} \
            file://download.patch \
+           file://download-eigen-tflite.patch \
 "
 SRCREV = "2b304c96b3e560cfb10c4301e8dc0ad5bc07ddc0"
 
