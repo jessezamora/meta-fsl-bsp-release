@@ -7,7 +7,7 @@ inherit module
 FILESEXTRAPATHS_prepend := "${THISDIR}/kernel-module-qcacld-lea:"
 
 # The following patchset are for kernel v4.14 only
-SRC_URI = "git://source.codeaurora.org/external/wlan/qcacld-2.0;protocol=https;branch=CNSS.LEA.NRT_2.0; \
+SRC_URI = "git://git.codelinaro.org/clo/la/platform/vendor/qcom-opensource/wlan/qcacld-2.0;protocol=https;branch=caf-wlan/caf-wlan/CNSS.LEA.NRT_2.0; \
            file://0001-CORE-QCA9377-CLD-LEA-2.0-porting-to-support-Android-.patch \
            file://0002-Kbuild-Eliminate-errors-by-tool-chain-and-disable-de.patch \
            file://0003-dbglog_host-add-timeout-for-dbglog_block-fwlog-read.patch \
