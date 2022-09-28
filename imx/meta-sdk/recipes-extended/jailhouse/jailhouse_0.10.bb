@@ -1,7 +1,7 @@
 require jailhouse.inc
 
 SRCBRANCH = "imx_4.14.98_2.3.0"
-IMX_JAILHOUSE_SRC ?= "git://source.codeaurora.org/external/imx/imx-jailhouse.git;protocol=ssh"
+IMX_JAILHOUSE_SRC ?= "git://github.com/nxp-imx/imx-jailhouse.git;protocol=ssh"
 
 SRC_URI = "${IMX_JAILHOUSE_SRC};branch=${SRCBRANCH}"
 SRCREV = "e83ab629ccc6f44e4caa05bc51c66d2f86546ee6" 
