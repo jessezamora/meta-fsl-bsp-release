@@ -6,7 +6,7 @@
 #
 #  SRC_URI = "${FSL_MIRROR}/firmware-imx-${PV};fsl-eula=true"
 
-LIC_FILES_CHKSUM_append = " file://${FSL_EULA_FILE};md5=5a0bf11f745e68024f37b4724a5364fe"
+LIC_FILES_CHKSUM_append = " file://${FSL_EULA_FILE};md5=add2d392714d3096ed7e0f7e2190724b"
 
 LIC_FILES_CHKSUM[vardepsexclude] += "FSL_EULA_FILE"
 
