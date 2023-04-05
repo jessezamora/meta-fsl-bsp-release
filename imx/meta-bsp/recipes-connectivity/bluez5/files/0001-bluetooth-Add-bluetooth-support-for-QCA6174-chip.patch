@@ -13,7 +13,7 @@ download the firmware patches:
 Upstream-Status: Inappropriate [enable feature]
 
 cherry-pick and merged from:
-	https://source.codeaurora.org/quic/la/platform/external/bluetooth/bluez
+	https://git.codelinaro.org/clo/la/platform/external/bluetooth/bluez
 	branch: LNX.LE.5.3
 	commit: commit bb96f3b759e0b99db70014302ca12929fb42f554
 
