@@ -10,7 +10,7 @@ inherit deploy pythonnative autotools
 DEPENDS = "python-pycrypto-native u-boot-mkimage-native"
 
 SRCBRANCH = "imx_4.9.88_2.0.0_ga"
-OPTEE_OS_SRC ?= "git://source.codeaurora.org/external/imx/imx-optee-os.git;protocol=https"
+OPTEE_OS_SRC ?= "git://github.com/nxp-imx/imx-optee-os.git;protocol=https"
 SRC_URI = "${OPTEE_OS_SRC};branch=${SRCBRANCH}"
 SRCREV = "17fec4d15572a06f354b00bf7ec9be08123ba3db"
 

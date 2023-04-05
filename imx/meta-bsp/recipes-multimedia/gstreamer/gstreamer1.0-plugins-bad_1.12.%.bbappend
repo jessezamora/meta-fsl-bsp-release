@@ -27,7 +27,7 @@ SRC_URI_remove_imx = " \
     http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-${PV}.tar.xz \
 "
 
-GST1.0-PLUGINS-BAD_SRC ?= "gitsm://source.codeaurora.org/external/imx/gst-plugins-bad.git;protocol=https"
+GST1.0-PLUGINS-BAD_SRC ?= "gitsm://github.com/nxp-imx/gst-plugins-bad.git;protocol=https"
 SRCBRANCH = "MM_04.03.05_1804_L4.9.88_MX7ULP_GA"
 
 SRC_URI_append_imx = " \

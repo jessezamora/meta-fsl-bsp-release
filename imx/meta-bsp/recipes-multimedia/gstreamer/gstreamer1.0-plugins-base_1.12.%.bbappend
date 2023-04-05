@@ -19,7 +19,7 @@ SRC_URI_remove_imx = " \
     file://get-caps-from-src-pad-when-query-caps.patch \
 "
 
-GST1.0-PLUGINS-BASE_SRC ?= "gitsm://source.codeaurora.org/external/imx/gst-plugins-base.git;protocol=https"
+GST1.0-PLUGINS-BASE_SRC ?= "gitsm://github.com/nxp-imx/gst-plugins-base.git;protocol=https"
 SRCBRANCH = "MM_04.03.05_1804_L4.9.88_MX7ULP_GA"
 
 SRC_URI_append_imx = " \

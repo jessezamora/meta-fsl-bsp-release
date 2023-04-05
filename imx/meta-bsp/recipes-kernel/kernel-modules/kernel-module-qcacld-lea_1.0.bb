@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://CORE/HDD/src/wlan_hdd_main.c;beginline=1;endline=20;m
 
 inherit module
 
-SRC_URI = "git://source.codeaurora.org/quic/la/platform/vendor/qcom-opensource/wlan/qcacld-2.0;protocol=https;branch=caf-wlan/CNSS.LEA.NRT_1.0; \
+SRC_URI = "git://git.codelinaro.org/clo/quic/la/platform/vendor/qcom-opensource/wlan/qcacld-2.0;protocol=https;branch=caf-wlan/CNSS.LEA.NRT_1.0; \
            file://0001-Kbuild-Eliminate-errors-by-tool-chain-and-disable-de.patch  \
            file://0002-LEA.NRT_1.0-fix-the-build-error.patch \
 "
