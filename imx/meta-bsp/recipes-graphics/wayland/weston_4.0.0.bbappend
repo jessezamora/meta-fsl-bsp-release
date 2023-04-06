@@ -5,7 +5,7 @@ DEPENDS_append_imxgpu2d = " virtual/libg2d"
 # Use i.MX fork of weston for customizations.
 SRC_URI_remove = "https://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz"
 SRC_URI += "file://0001-weston.ini.in-Modify-paths-to-point-to-right-directo.patch"
-WESTON_SRC ?= "git://source.codeaurora.org/external/imx/weston-imx.git;protocol=https"
+WESTON_SRC ?= "git://github.com/nxp-imx/weston-imx.git;protocol=https"
 SRCBRANCH = "weston-imx-4.0"
 SRC_URI_prepend = "${WESTON_SRC};branch=${SRCBRANCH} "
 SRCREV = "bf74309dd16d86537ff07eabf8b499cb2d25277d"
