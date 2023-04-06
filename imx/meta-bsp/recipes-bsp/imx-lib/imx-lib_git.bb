@@ -35,7 +35,7 @@ PE = "1"
 
 NXP_REPO_MIRROR ?= "nxp/"
 SRCBRANCH = "${NXP_REPO_MIRROR}imx_4.9.11_1.0.0_ga"
-IMXLIB_SRC ?= "git://source.codeaurora.org/external/imx/imx-lib.git;protocol=https"
+IMXLIB_SRC ?= "git://github.com/nxp-imx/imx-lib.git;protocol=https"
 SRC_URI = "${IMXLIB_SRC};branch=${SRCBRANCH}"
 SRCREV = "f5f14fc24581e5d6e689f42a56b5f2992f978ef4"
 

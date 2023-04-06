@@ -17,7 +17,7 @@ PARALLEL_MAKE="-j 1"
 
 NXP_REPO_MIRROR ?= "nxp/"
 SRCBRANCH = "${NXP_REPO_MIRROR}imx_4.9.11_1.0.0_ga"
-IMXTEST_SRC ?= "git://source.codeaurora.org/external/imx/imx-test.git;protocol=https"
+IMXTEST_SRC ?= "git://github.com/nxp-imx/imx-test.git;protocol=https"
 
 SRC_URI = "${IMXTEST_SRC};branch=${SRCBRANCH}"
 SRCREV = "fb250a795ce0d25c19610e9e19e1cd815fc64cb9"

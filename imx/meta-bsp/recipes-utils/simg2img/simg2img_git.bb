@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b433a746dd6fe8862028b1d7fc412a4d"
 
 DEPENDS = "zlib"
 
-SIMG2IMG_SRC ?= "git://source.codeaurora.org/external/imx/simg2img.git;protocol=https"
+SIMG2IMG_SRC ?= "git://github.com/nxp-imx/simg2img.git;protocol=https"
 NXP_REPO_MIRROR ?= "nxp/"
 SRC_BRANCH = "${NXP_REPO_MIRROR}master"
 
