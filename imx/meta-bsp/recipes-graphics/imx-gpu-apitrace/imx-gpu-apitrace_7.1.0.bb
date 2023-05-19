@@ -3,7 +3,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=aeb969185a143c3c25130bc2c3ef9a50"
 DEPENDS = "virtual/libg2d imx-gpu-viv zlib libpng procps"
 
-SRC_URI = "git://github.com/apitrace/apitrace.git;nobranch=1;tag=7.1 \
+SRC_URI = "git://github.com/apitrace/apitrace.git;nobranch=1;tag=7.1;protocol=https; \
           file://0001-add-docs-HOWTO.markdown.patch \
           file://0002-add-docs-Freescale_apitrace_user_guide.markdown.patch \
           file://0003-add-docs-Freescale_apitrace.markdown.patch \
