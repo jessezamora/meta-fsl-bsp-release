@@ -8,7 +8,7 @@ SRC_URI_append_mx8mq = " file://0001-weston.ini-using-argb8888-as-gbm-default-on
                          file://0002-weston.ini-configure-desktop-shell-size-in-weston-co.patch \
 "
 
-WESTON_SRC ?= "git://source.codeaurora.org/external/imx/weston-imx.git;protocol=https"
+WESTON_SRC ?= "git://github.com/nxp-imx/weston-imx.git;protocol=https"
 SRCBRANCH = "weston-imx-4.0"
 SRC_URI_prepend = "${WESTON_SRC};branch=${SRCBRANCH} "
 SRCREV = "866072b52751e5023651dd9322baa513e1f74fe6"
