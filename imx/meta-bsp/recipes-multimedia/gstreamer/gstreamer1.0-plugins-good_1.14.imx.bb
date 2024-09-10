@@ -7,13 +7,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 
 DEPENDS += "libdrm"
 
-GST1.0-PLUGINS-GOOD_SRC ?= "gitsm://github.com/nxp-imx/gst-plugins-good.git;protocol=https"
+GST1.0-PLUGINS-GOOD_SRC ?= "gitsm://github.com/jessezamora/gst-plugins-good.git;protocol=https"
 SRCBRANCH = "MM_04.05.00_1908_L4.14.98"
 
 SRC_URI = " \
     ${GST1.0-PLUGINS-GOOD_SRC};branch=${SRCBRANCH} \
 "
-SRCREV = "6aa0b5632a610ea09278624826fb312db9f7b1b9"
+SRCREV = "7d1a4a4ff4394197fdc668280e87746f2851ea60"
 
 EXTRA_AUTORECONF = ""
 

@@ -23,7 +23,7 @@ PACKAGECONFIG[gio-unix-2.0] = ""
 
 EXTRA_OECONF_append = " --disable-opengl --enable-wayland"
 
-GST1.0-PLUGINS-BASE_SRC ?= "gitsm://github.com/nxp-imx/gst-plugins-base.git;protocol=https"
+GST1.0-PLUGINS-BASE_SRC ?= "gitsm://github.com/jessezamora/gst-plugins-base.git;protocol=https"
 SRCBRANCH = "MM_04.05.00_1908_L4.14.98"
 
 SRC_URI = " \
@@ -31,7 +31,7 @@ SRC_URI = " \
     file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
     file://make-gio_unix_2_0-dependency-configurable.patch \
 "
-SRCREV = "5e8cc757e4fec72ee007ac12fab2d1333fce1dc9" 
+SRCREV = "4da4864f626cce6c1cfd29c51e6bbee6b30d8ae4" 
 
 inherit use-imx-headers
 

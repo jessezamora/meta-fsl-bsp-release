@@ -7,11 +7,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6762ed442b3822387a51c92d928ead0d \
                     file://gst/gst.h;beginline=1;endline=21;md5=e059138481205ee2c6fc1c079c016d0d"
 
 # Use i.MX fork of GST for customizations
-GST1.0_SRC ?= "gitsm://github.com/nxp-imx/gstreamer.git;protocol=https"
+GST1.0_SRC ?= "gitsm://github.com/jessezamora/gstreamer.git;protocol=https"
 SRCBRANCH = "MM_04.05.00_1908_L4.14.98"
 
 SRC_URI = " ${GST1.0_SRC};branch=${SRCBRANCH}"
-SRCREV = "d42548da09724ad8cc1aa4f1944607920be2f4c0" 
+SRCREV = "9610d3cca49f30227f7f5194df0c30af97be1ca1" 
 
 EXTRA_AUTORECONF = ""
 
